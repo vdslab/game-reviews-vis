@@ -1,8 +1,9 @@
+import Header from "./components/Header";
 import Icon from "./components/Icon";
 const App = () => {
   return (
     <div>
-      <h1>ゲームレビュー可視化</h1>
+      <Header></Header>
       <Icon></Icon>
     </div>
   );

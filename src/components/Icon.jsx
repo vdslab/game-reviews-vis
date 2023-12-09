@@ -1,4 +1,7 @@
+import { useState } from "react";
+
 const Icon = () => {
+  const [isHovered, setIsHovered] = useState(false);
   const image_png =
     "https://cdn.akamai.steamstatic.com/steam/apps/1097150/header.jpg?t=1698763175";
 
@@ -9,6 +12,8 @@ const Icon = () => {
   return (
     <button
       onClick={handleIconClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
         padding: 0,
         backgroundColor: "transparent",
@@ -23,10 +28,12 @@ const Icon = () => {
       <img
         src={image_png}
         alt="my image"
+        draggable={false}
         style={{
           width: "100%",
           height: "100%",
           objectFit: "cover",
+          filter: isHovered ? "brightness(110%)" : "brightness(100%)",
         }}
       />
     </button>
