@@ -6,10 +6,14 @@ import { useState, useEffect } from "react";
 
 import Header from "./components/Header";
 import Icon from "./components/Icon";
-import Wordcloud from "./components/Wordcloud";
+import FetchData from "./components/FetchData";
 
 const App = () => {
-  const [wordsData, setWordsData] = useState(null);
+  const [data, setData] = useState([]);
+  const [selectGameIdx, setSelectGameIdx] = useState(0);
+
+  const gameCount = 1;
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -22,8 +26,15 @@ const App = () => {
   // フォントの大きさを決める関数
   const fontSizeMapper = (word) => Math.pow(word.value, 0.5) * 1.5;
 
+  const getColor = (value) => {
+    const blueflag = value > 0.5;
+    const color = blueflag ? 240 : 0;
+    const lightness = 50 + (blueflag ? Math.abs(value - 1) : value) * 100;
+    return `hsl(${color}, 100%, ${lightness}%)`;
+  };
+
   useEffect(() => {
-    Wordcloud(setWordsData);
+    FetchData({ gameCount, setData });
   }, []);
 
   return (
@@ -32,18 +43,33 @@ const App = () => {
       <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
         <Grid item xs={8}>
           <Item square>
-            <Icon></Icon>
+            {data.length !== 0 ? (
+              data.map((item, i) => {
+                return (
+                  <Icon
+                    name={item.name}
+                    header_image={item.header_image}
+                    index={i + 1}
+                    setSelectGameIdx={setSelectGameIdx}
+                    key={i}
+                  ></Icon>
+                );
+              })
+            ) : (
+              <h2>Loading...</h2>
+            )}
           </Item>
         </Grid>
         <Grid item xs={4}>
           <Item square>
-            {wordsData ? (
+            {data.length !== 0 ? (
               <WordCloud
-                data={wordsData.data}
+                data={data[selectGameIdx].wordcloud}
                 fontSize={fontSizeMapper}
                 width={100}
                 height={100}
                 rotate={0}
+                fill={(word) => getColor(word.rating)}
               ></WordCloud>
             ) : (
               <h2>Loading...</h2>

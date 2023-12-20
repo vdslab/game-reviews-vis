@@ -1,22 +1,26 @@
 import { useState } from "react";
 
-const Icon = () => {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const imagePng =
-    "https://cdn.akamai.steamstatic.com/steam/apps/1097150/header.jpg?t=1698763175";
-
-  const gameTitle = "Fall Guys";
+const Icon = (props) => {
+  const { name, header_image, index, setSelectGameIdx } = props;
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleIconClick = () => {
-    console.log("クリックされました");
+    setSelectGameIdx(index - 1);
   };
 
   return (
-    <div style={{ position: "relative", display: "inline-block" }}>
+    <div
+      style={{
+        position: "relative",
+        display: "inline-block",
+        marginRight: "15px",
+        marginTop: "70px",
+      }}
+    >
       <button
         onClick={handleIconClick}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         style={{
           padding: 0,
           backgroundColor: "transparent",
@@ -24,22 +28,23 @@ const Icon = () => {
           cursor: "pointer",
           borderRadius: "50%",
           overflow: "hidden",
-          width: "100px",
-          height: "100px",
+          width: "80px",
+          height: "80px",
         }}
       >
         <img
-          src={imagePng}
+          src={header_image}
           alt="my image"
           draggable={false}
           style={{
             width: "100%",
             height: "100%",
             objectFit: "cover",
+            filter: isHovered ? "brightness(110%)" : "brightness(100%)",
           }}
         />
       </button>
-      {showTooltip && (
+      {isHovered && (
         <div
           style={{
             position: "absolute",
@@ -51,11 +56,23 @@ const Icon = () => {
             padding: "8px",
             borderRadius: "4px",
             fontSize: "14px",
+            zIndex: 9999,
           }}
         >
-          {gameTitle}
+          {name}
         </div>
       )}
+      <div
+        style={{
+          position: "absolute",
+          top: "-30px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          justifyContent: "center",
+        }}
+      >
+        {index}
+      </div>
     </div>
   );
 };
