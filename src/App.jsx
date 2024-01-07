@@ -7,13 +7,11 @@ import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Icon from "./components/Icon";
 import FetchData from "./components/FetchData";
+import NodeLink from "./components/NodeLink";
 
 const App = () => {
   const [data, setData] = useState([]);
   const [selectGameIdx, setSelectGameIdx] = useState(0);
-  console.log(data);
-  const gameCount = 3;
-
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -34,7 +32,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    FetchData({ gameCount, setData });
+    FetchData({ setData });
   }, []);
 
   return (
@@ -58,11 +56,12 @@ const App = () => {
             ) : (
               <h2>Loading...</h2>
             )}
+            <NodeLink></NodeLink>
           </Item>
         </Grid>
         <Grid item xs={4}>
           <Item square>
-            {/* <div style={{ backgroundColor: "gray" }}>
+            <div style={{ backgroundColor: "lightgray" }}>
               {data.length !== 0 ? (
                 <WordCloud
                   data={data[selectGameIdx].wordcloud}
@@ -75,7 +74,7 @@ const App = () => {
               ) : (
                 <h2>Loading...</h2>
               )}
-            </div> */}
+            </div>
           </Item>
         </Grid>
       </Grid>
