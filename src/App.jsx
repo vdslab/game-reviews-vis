@@ -1,4 +1,4 @@
-import Grid from "@material-ui/core/Grid";
+import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import WordCloud from "react-d3-cloud";
@@ -11,8 +11,8 @@ import FetchData from "./components/FetchData";
 const App = () => {
   const [data, setData] = useState([]);
   const [selectGameIdx, setSelectGameIdx] = useState(0);
-
-  const gameCount = 1;
+  console.log(data);
+  const gameCount = 3;
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -62,18 +62,20 @@ const App = () => {
         </Grid>
         <Grid item xs={4}>
           <Item square>
-            {data.length !== 0 ? (
-              <WordCloud
-                data={data[selectGameIdx].wordcloud}
-                fontSize={fontSizeMapper}
-                width={100}
-                height={100}
-                rotate={0}
-                fill={(word) => getColor(word.rating)}
-              ></WordCloud>
-            ) : (
-              <h2>Loading...</h2>
-            )}
+            {/* <div style={{ backgroundColor: "gray" }}>
+              {data.length !== 0 ? (
+                <WordCloud
+                  data={data[selectGameIdx].wordcloud}
+                  fontSize={fontSizeMapper}
+                  width={100}
+                  height={100}
+                  rotate={0}
+                  fill={(word) => getColor(word.rating)}
+                ></WordCloud>
+              ) : (
+                <h2>Loading...</h2>
+              )}
+            </div> */}
           </Item>
         </Grid>
       </Grid>

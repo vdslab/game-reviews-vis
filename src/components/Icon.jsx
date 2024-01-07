@@ -28,8 +28,8 @@ const Icon = (props) => {
           cursor: "pointer",
           borderRadius: "50%",
           overflow: "hidden",
-          width: "80px",
-          height: "80px",
+          width: "50px",
+          height: "50px",
         }}
       >
         <img
@@ -62,7 +62,7 @@ const Icon = (props) => {
           {name}
         </div>
       )}
-      <div
+      {/* <div
         style={{
           position: "absolute",
           top: "-30px",
@@ -72,7 +72,7 @@ const Icon = (props) => {
         }}
       >
         {index}
-      </div>
+      </div> */}
     </div>
   );
 };

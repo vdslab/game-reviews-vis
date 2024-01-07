@@ -2,8 +2,10 @@ import Wordcloud from "./Wordcloud";
 
 const FetchData = (props) => {
   const { gameCount, setData } = props;
-  const spyurl = "https://steamspy.com/api.php?request=top100in2weeks";
-  const url = "https://us-central1-district-391309.cloudfunctions.net/test";
+  const spyurl =
+    "https://us-central1-district-391309.cloudfunctions.net/steam_game_ranking";
+  const url =
+    "https://us-central1-district-391309.cloudfunctions.net/test/request=1097150";
 
   const data = new Array(gameCount).fill({
     genres: ["Action", "Casual", "Indie", "Massively Multiplayer", "Sports"],
@@ -426,7 +428,7 @@ const FetchData = (props) => {
         review:
           "Reminds me of the old TV show Takeshi Castle. Fun to play with friends and cute art",
         voted_up: true,
-      }, */
+      },*/
     ],
   });
 
@@ -441,11 +443,11 @@ const FetchData = (props) => {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
+  }; */
 
-  fetchData(); */
-
-  Wordcloud({ data, setData });
+  //fetchData();
+  setData(data);
+  //Wordcloud({ data, setData });
 };
 
 export default FetchData;
