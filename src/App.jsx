@@ -56,7 +56,7 @@ const App = () => {
             ) : (
               <h2>Loading...</h2>
             )}
-            <NodeLink></NodeLink>
+            {data.length !== 0 && <NodeLink data={data}></NodeLink>}
           </Item>
         </Grid>
         <Grid item xs={4}>
