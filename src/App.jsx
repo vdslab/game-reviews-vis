@@ -35,6 +35,7 @@ const App = () => {
     FetchData({ setData });
   }, []);
 
+  console.log();
   return (
     <div>
       <Header></Header>
@@ -42,6 +43,19 @@ const App = () => {
         <Grid item xs={8}>
           <Item square>
             {data.length !== 0 ? (
+              <NodeLink
+                props={data.map((item, i) => ({
+                  name: item.name,
+                  header_image: item.header_image,
+                  index: i + 1,
+                  setSelectGameIdx: setSelectGameIdx,
+                  key: i,
+                }))}
+              />
+            ) : (
+              <h2>Loading...</h2>
+            )}
+            {/* {data.length !== 0 ? (
               data.map((item, i) => {
                 return (
                   <Icon
@@ -55,8 +69,7 @@ const App = () => {
               })
             ) : (
               <h2>Loading...</h2>
-            )}
-            {data.length !== 0 && <NodeLink data={data}></NodeLink>}
+            )} */}
           </Item>
         </Grid>
         <Grid item xs={4}>
