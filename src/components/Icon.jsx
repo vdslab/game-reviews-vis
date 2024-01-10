@@ -8,6 +8,8 @@ const Icon = (props) => {
     setSelectGameIdx(index - 1);
   };
 
+  console.log(props);
+
   return (
     <div
       style={{

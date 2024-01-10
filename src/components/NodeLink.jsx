@@ -3,22 +3,48 @@ import * as d3 from "d3";
 
 import Icon from "./Icon";
 
-const NodeLink = ({ props }) => {
+const NodeLink = (props) => {
+  const { data, selectGameIdx } = props;
   const chartRef = useRef();
 
-  const nodes = Object.values(props).map((node, index) => ({
+  const nodes = Object.values(data).map((node, index) => ({
     id: index,
     name: node.name,
     header_image: node.header_image,
+    wordcloud: node.wordcloud,
     setSelectGameIdx: node.setSelectGameIdx,
-    x: node.x,
-    y: node.y,
   }));
 
-  const links = [
-    { source: 0, target: 1 },
-    { source: 1, target: 2 },
-  ];
+  const links = nodes.map((_, i) => {
+    return { source: selectGameIdx, target: i };
+  });
+
+  const calcWeight = (arr1, arr2) => {
+    const map1 = new Map();
+    const map2 = new Map();
+
+    arr1.forEach((item) => {
+      if (!map1.has(item.text) || map1.get(item.text) > item.value) {
+        map1.set(item.text, item.value);
+      }
+    });
+
+    arr2.forEach((item) => {
+      if (!map2.has(item.text) || map2.get(item.text) > item.value) {
+        map2.set(item.text, item.value);
+      }
+    });
+
+    let sum = 0;
+
+    map1.forEach((value, text) => {
+      if (map2.has(text)) {
+        sum += Math.min(value, map2.get(text));
+      }
+    });
+
+    return sum;
+  };
 
   useEffect(() => {
     const width = window.innerWidth;
@@ -51,7 +77,24 @@ const NodeLink = ({ props }) => {
 
     nodeElements
       .append("image")
-      .attr("href", (d) => d.header_image)
+      .attr(
+        "href",
+        nodes.length !== 0 ? (
+          nodes.map((item, i) => {
+            return (
+              <Icon
+                name={item.name}
+                header_image={item.header_image}
+                index={i + 1}
+                setSelectGameIdx={item.setSelectGameIdx}
+                key={i}
+              ></Icon>
+            );
+          })
+        ) : (
+          <h2>Loading...</h2>
+        )
+      )
       .attr("width", 75)
       .attr("height", 60)
       .attr("x", -37.5)
@@ -71,10 +114,14 @@ const NodeLink = ({ props }) => {
         d3
           .forceLink(links)
           .id((d) => d.id)
-          .distance(100)
+          .distance((item) => {
+            return (
+              10 * calcWeight(item.source.wordcloud, item.target.wordcloud)
+            );
+          })
       )
       .force("charge", d3.forceManyBody().strength(-100))
-      .force("center", d3.forceCenter(width / 2, height / 2));
+      .force("center", d3.forceCenter(width / 3, height / 2));
 
     simulation.on("tick", () => {
       svg

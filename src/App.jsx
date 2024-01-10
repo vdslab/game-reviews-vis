@@ -35,7 +35,7 @@ const App = () => {
     FetchData({ setData });
   }, []);
 
-  console.log();
+  console.log(selectGameIdx);
   return (
     <div>
       <Header></Header>
@@ -44,13 +44,15 @@ const App = () => {
           <Item square>
             {data.length !== 0 ? (
               <NodeLink
-                props={data.map((item, i) => ({
+                data={data.map((item, i) => ({
                   name: item.name,
                   header_image: item.header_image,
                   index: i + 1,
                   setSelectGameIdx: setSelectGameIdx,
+                  wordcloud: item.wordcloud,
                   key: i,
                 }))}
+                selectGameIdx={selectGameIdx}
               />
             ) : (
               <h2>Loading...</h2>
