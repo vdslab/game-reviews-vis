@@ -62,17 +62,6 @@ const Icon = (props) => {
           {name}
         </div>
       )}
-      {/* <div
-        style={{
-          position: "absolute",
-          top: "-30px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          justifyContent: "center",
-        }}
-      >
-        {index}
-      </div> */}
     </div>
   );
 };
