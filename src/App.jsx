@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Icon from "./components/Icon";
 import FetchData from "./components/FetchData";
+import NodeLink from "./components/NodeLink";
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -78,6 +79,12 @@ const App = () => {
             </div> */}
           </Item>
         </Grid>
+        <NodeLink
+          props={data.map((item) => ({
+            name: item.name,
+            header_image: item.header_image,
+          }))}
+        />
       </Grid>
     </div>
   );
