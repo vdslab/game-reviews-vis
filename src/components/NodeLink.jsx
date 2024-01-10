@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
-
 import Icon from "./Icon";
 
 const NodeLink = (props) => {
@@ -50,62 +49,7 @@ const NodeLink = (props) => {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    const svg = d3.select(chartRef.current);
-
-    svg
-      .selectAll(".link")
-      .data(links)
-      .enter()
-      .append("line")
-      .attr("class", "link")
-      .style("stroke", "#999")
-      .style("stroke-width", 2);
-
-    const nodeElements = svg
-      .selectAll(".node")
-      .data(nodes)
-      .enter()
-      .append("g")
-      .attr("class", "node");
-    // .call(
-    //   d3
-    //     .drag()
-    //     .on("start", dragstarted)
-    //     .on("drag", dragged)
-    //     .on("end", dragended)
-    // );
-
-    nodeElements
-      .append("image")
-      .attr(
-        "href",
-        nodes.length !== 0 ? (
-          nodes.map((item, i) => {
-            return (
-              <Icon
-                name={item.name}
-                header_image={item.header_image}
-                index={i + 1}
-                setSelectGameIdx={item.setSelectGameIdx}
-                key={i}
-              ></Icon>
-            );
-          })
-        ) : (
-          <h2>Loading...</h2>
-        )
-      )
-      .attr("width", 75)
-      .attr("height", 60)
-      .attr("x", -37.5)
-      .attr("y", -30)
-      .on("click", (event, d) => handleIconClick(d));
-
-    nodeElements
-      .append("text")
-      .attr("text-anchor", "middle")
-      .attr("dy", 40)
-      .text((d) => d.name);
+    const svg = chartRef.current;
 
     const simulation = d3
       .forceSimulation(nodes)
@@ -124,35 +68,20 @@ const NodeLink = (props) => {
       .force("center", d3.forceCenter(width / 3, height / 2));
 
     simulation.on("tick", () => {
-      svg
+      d3.select(svg)
         .selectAll(".link")
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
         .attr("y2", (d) => d.target.y);
 
-      nodeElements.attr("transform", (d) => `translate(${d.x},${d.y})`);
+      d3.select(svg)
+        .selectAll(".node")
+        .attr("transform", (d) => `translate(${d.x},${d.y})`);
     });
 
     simulation.restart();
-  }, [nodes]);
-
-  // const dragstarted = (event, d) => {
-  //   if (!event.active) simulation.alphaTarget(0.3).restart();
-  //   d.fx = d.x;
-  //   d.fy = d.y;
-  // };
-
-  // const dragged = (event, d) => {
-  //   d.fx = event.x;
-  //   d.fy = event.y;
-  // };
-
-  // const dragended = (event, d) => {
-  //   if (!event.active) simulation.alphaTarget(0);
-  //   d.fx = null;
-  //   d.fy = null;
-  // };
+  }, [data, selectGameIdx]);
 
   const handleIconClick = (node) => {
     node.setSelectGameIdx(node.id);
@@ -160,8 +89,41 @@ const NodeLink = (props) => {
 
   return (
     <svg ref={chartRef} width={window.innerWidth} height={window.innerHeight}>
-      <g className="links"></g>
-      <g className="nodes"></g>
+      {/* Reactコンポーネント内で生成したSVG要素を利用 */}
+      <g className="links">
+        {links.map((link, index) => (
+          <line
+            key={index}
+            className="link"
+            x1={link.source.x}
+            y1={link.source.y}
+            x2={link.target.x}
+            y2={link.target.y}
+            style={{ stroke: "#999", strokeWidth: 2 }}
+          />
+        ))}
+      </g>
+      <g className="nodes">
+        {nodes.map((node, index) => (
+          <g
+            key={index}
+            className="node"
+            transform={`translate(${node.x},${node.y})`}
+            onClick={() => handleIconClick(node)}
+          >
+            <image
+              href={node.header_image}
+              width={75}
+              height={60}
+              x={-37.5}
+              y={-30}
+            />
+            <text textAnchor="middle" dy={40}>
+              {node.name}
+            </text>
+          </g>
+        ))}
+      </g>
     </svg>
   );
 };
