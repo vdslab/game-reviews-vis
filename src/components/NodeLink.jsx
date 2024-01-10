@@ -3,16 +3,19 @@ import * as d3 from "d3";
 
 const NodeLink = ({ props }) => {
   const chartRef = useRef();
+  console.log(props);
   const nodes = Object.values(props).map((node, index) => ({
     id: index,
     name: node.name,
     header_image: node.header_image,
   }));
+  console.log(props);
 
   const links = [
     { source: 0, target: 1 },
     { source: 1, target: 2 },
   ];
+
   console.log(nodes);
   useEffect(() => {
     // 画面サイズの取得

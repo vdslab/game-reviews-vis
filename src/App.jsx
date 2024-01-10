@@ -35,6 +35,7 @@ const App = () => {
     FetchData({ setData });
   }, []);
 
+  console.log();
   return (
     <div>
       <Header></Header>
@@ -56,7 +57,6 @@ const App = () => {
             ) : (
               <h2>Loading...</h2>
             )}
-            <NodeLink></NodeLink>
           </Item>
         </Grid>
         <Grid item xs={4}>
@@ -77,12 +77,16 @@ const App = () => {
             </div>
           </Item>
         </Grid>
-        <NodeLink
-          props={data.map((item) => ({
-            name: item.name,
-            header_image: item.header_image,
-          }))}
-        />
+        {data.length !== 0 ? (
+          <NodeLink
+            props={data.map((item) => ({
+              name: item.name,
+              header_image: item.header_image,
+            }))}
+          />
+        ) : (
+          <h2>Loading...</h2>
+        )}
       </Grid>
     </div>
   );
