@@ -77,24 +77,7 @@ const NodeLink = (props) => {
 
     nodeElements
       .append("image")
-      .attr(
-        "href",
-        nodes.length !== 0 ? (
-          nodes.map((item, i) => {
-            return (
-              <Icon
-                name={item.name}
-                header_image={item.header_image}
-                index={i + 1}
-                setSelectGameIdx={item.setSelectGameIdx}
-                key={i}
-              ></Icon>
-            );
-          })
-        ) : (
-          <h2>Loading...</h2>
-        )
-      )
+      .attr("href", (d) => d.header_image)
       .attr("width", 75)
       .attr("height", 60)
       .attr("x", -37.5)
@@ -160,7 +143,19 @@ const NodeLink = (props) => {
 
   return (
     <svg ref={chartRef} width={window.innerWidth} height={window.innerHeight}>
-      <g className="links"></g>
+      <g className="links">
+        {links.map((link, i) => (
+          <line
+            key={i}
+            className="link"
+            x1={link.source.x}
+            y1={link.source.y}
+            x2={link.target.x}
+            y2={link.target.y}
+            style={{ stroke: "#999", strokeWidth: 2 }}
+          />
+        ))}
+      </g>
       <g className="nodes"></g>
     </svg>
   );
