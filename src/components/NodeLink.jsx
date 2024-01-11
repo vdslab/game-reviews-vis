@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
+
 import Icon from "./Icon";
 
 const NodeLink = (props) => {
@@ -14,9 +15,16 @@ const NodeLink = (props) => {
     setSelectGameIdx: node.setSelectGameIdx,
   }));
 
-  const links = nodes.map((_, i) => {
+  /* const links = nodes.map((_, i) => {
     return { source: selectGameIdx, target: i };
-  });
+  }); */
+
+  const links = [];
+  for (let i = 0; i < nodes.length - 1; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      links.push({ source: i, target: j });
+    }
+  }
 
   const calcWeight = (arr1, arr2) => {
     const map1 = new Map();
@@ -49,7 +57,53 @@ const NodeLink = (props) => {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    const svg = chartRef.current;
+    const svg = d3.select(chartRef.current);
+
+    svg
+      .selectAll(".link")
+      .data(links)
+      .enter()
+      .append("line")
+      .attr("class", "link")
+      .style("stroke", "gray")
+      .style("stroke-width", 1);
+
+    const nodeElements = svg
+      .selectAll(".node")
+      .data(nodes)
+      .enter()
+      .append("g")
+      .attr("class", "node");
+    // .call(
+    //   d3
+    //     .drag()
+    //     .on("start", dragstarted)
+    //     .on("drag", dragged)
+    //     .on("end", dragended)
+    // );
+
+    nodeElements
+      .append("defs")
+      .append("clipPath")
+      .attr("id", (d, i) => `clip-${i}`)
+      .append("circle")
+      .attr("r", 17);
+
+    nodeElements
+      .append("image")
+      .attr("href", (d) => d.header_image)
+      .attr("width", 75)
+      .attr("height", 60)
+      .attr("x", -37.5)
+      .attr("y", -30)
+      .attr("clip-path", (d, i) => `url(#clip-${i})`)
+      .on("click", (event, d) => handleIconClick(d));
+
+    nodeElements
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("dy", 40)
+      .text((d) => d.name);
 
     const simulation = d3
       .forceSimulation(nodes)
@@ -68,20 +122,35 @@ const NodeLink = (props) => {
       .force("center", d3.forceCenter(width / 3, height / 2));
 
     simulation.on("tick", () => {
-      d3.select(svg)
+      svg
         .selectAll(".link")
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
         .attr("y2", (d) => d.target.y);
 
-      d3.select(svg)
-        .selectAll(".node")
-        .attr("transform", (d) => `translate(${d.x},${d.y})`);
+      nodeElements.attr("transform", (d) => `translate(${d.x},${d.y})`);
     });
 
     simulation.restart();
-  }, [data, selectGameIdx]);
+  }, [nodes]);
+
+  // const dragstarted = (event, d) => {
+  //   if (!event.active) simulation.alphaTarget(0.3).restart();
+  //   d.fx = d.x;
+  //   d.fy = d.y;
+  // };
+
+  // const dragged = (event, d) => {
+  //   d.fx = event.x;
+  //   d.fy = event.y;
+  // };
+
+  // const dragended = (event, d) => {
+  //   if (!event.active) simulation.alphaTarget(0);
+  //   d.fx = null;
+  //   d.fy = null;
+  // };
 
   const handleIconClick = (node) => {
     node.setSelectGameIdx(node.id);
@@ -89,41 +158,20 @@ const NodeLink = (props) => {
 
   return (
     <svg ref={chartRef} width={window.innerWidth} height={window.innerHeight}>
-      {/* Reactコンポーネント内で生成したSVG要素を利用 */}
       <g className="links">
-        {links.map((link, index) => (
+        {links.map((link, i) => (
           <line
-            key={index}
+            key={i}
             className="link"
             x1={link.source.x}
             y1={link.source.y}
             x2={link.target.x}
             y2={link.target.y}
-            style={{ stroke: "#999", strokeWidth: 2 }}
+            style={{ stroke: "#999", strokeWidth: 0.5 }}
           />
         ))}
       </g>
-      <g className="nodes">
-        {nodes.map((node, index) => (
-          <g
-            key={index}
-            className="node"
-            transform={`translate(${node.x},${node.y})`}
-            onClick={() => handleIconClick(node)}
-          >
-            <image
-              href={node.header_image}
-              width={75}
-              height={60}
-              x={-37.5}
-              y={-30}
-            />
-            <text textAnchor="middle" dy={40}>
-              {node.name}
-            </text>
-          </g>
-        ))}
-      </g>
+      <g className="nodes"></g>
     </svg>
   );
 };

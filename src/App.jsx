@@ -78,14 +78,17 @@ const App = () => {
           <Item square>
             <div style={{ backgroundColor: "lightgray" }}>
               {data.length !== 0 ? (
-                <WordCloud
-                  data={data[selectGameIdx].wordcloud}
-                  fontSize={fontSizeMapper}
-                  width={100}
-                  height={100}
-                  rotate={0}
-                  fill={(word) => getColor(word.rating)}
-                ></WordCloud>
+                <div>
+                  <WordCloud
+                    data={data[selectGameIdx].wordcloud}
+                    fontSize={fontSizeMapper}
+                    width={100}
+                    height={100}
+                    rotate={0}
+                    fill={(word) => getColor(word.rating)}
+                  ></WordCloud>
+                  <h1>{data[selectGameIdx].name}</h1>
+                </div>
               ) : (
                 <h2>Loading...</h2>
               )}
