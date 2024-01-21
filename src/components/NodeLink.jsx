@@ -7,21 +7,6 @@ const NodeLink = (props) => {
   const { data, selectGameIdx } = props;
   const chartRef = useRef();
 
-  const nodes = Object.values(data).map((node, index) => ({
-    id: index,
-    name: node.name,
-    header_image: node.header_image,
-    wordcloud: node.wordcloud,
-    setSelectGameIdx: node.setSelectGameIdx,
-  }));
-
-  const links = [];
-  for (let i = 0; i < nodes.length - 1; i++) {
-    for (let j = i + 1; j < nodes.length; j++) {
-      links.push({ source: i, target: j });
-    }
-  }
-
   const calcWeight = (arr1, arr2) => {
     const map1 = new Map();
     const map2 = new Map();
@@ -48,6 +33,24 @@ const NodeLink = (props) => {
 
     return sum;
   };
+
+  const nodes = Object.values(data).map((node, index) => ({
+    id: index,
+    name: node.name,
+    header_image: node.header_image,
+    wordcloud: node.wordcloud,
+    setSelectGameIdx: node.setSelectGameIdx,
+  }));
+
+  const links = [];
+  for (let i = 0; i < nodes.length - 1; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const count = calcWeight(nodes[i].wordcloud, nodes[j].wordcloud);
+      if (count > 300) {
+        links.push({ source: i, target: j });
+      }
+    }
+  }
 
   useEffect(() => {
     const width = window.innerWidth;
@@ -94,9 +97,7 @@ const NodeLink = (props) => {
           .forceLink(links)
           .id((d) => d.id)
           .distance((item) => {
-            return (
-              10 * calcWeight(item.source.wordcloud, item.target.wordcloud)
-            );
+            return calcWeight(item.source.wordcloud, item.target.wordcloud);
           })
       )
       .force("charge", d3.forceManyBody().strength(-100))

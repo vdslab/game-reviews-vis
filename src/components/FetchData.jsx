@@ -21,7 +21,6 @@ const FetchData = (props) => {
         const steamDetailsData = await steamDetailsResponse.json();
 
         if (!steamDetailsData[gameId].success) return;
-        console.log(steamDetailsData[gameId].success);
 
         const extractedData = {
           name: steamDetailsData[gameId].data.name,
