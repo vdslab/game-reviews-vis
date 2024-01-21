@@ -15,10 +15,6 @@ const NodeLink = (props) => {
     setSelectGameIdx: node.setSelectGameIdx,
   }));
 
-  /* const links = nodes.map((_, i) => {
-    return { source: selectGameIdx, target: i };
-  }); */
-
   const links = [];
   for (let i = 0; i < nodes.length - 1; i++) {
     for (let j = i + 1; j < nodes.length; j++) {
@@ -72,22 +68,8 @@ const NodeLink = (props) => {
       .selectAll(".node")
       .data(nodes)
       .enter()
-      .append("g")
-      .attr("class", "node");
-    // .call(
-    //   d3
-    //     .drag()
-    //     .on("start", dragstarted)
-    //     .on("drag", dragged)
-    //     .on("end", dragended)
-    // );
-
-    nodeElements
-      .append("defs")
-      .append("clipPath")
-      .attr("id", (d, i) => `clip-${i}`)
-      .append("circle")
-      .attr("r", 17);
+      .append("g") //
+      .attr("class", "node"); //
 
     nodeElements
       .append("image")
@@ -96,14 +78,13 @@ const NodeLink = (props) => {
       .attr("height", 60)
       .attr("x", -37.5)
       .attr("y", -30)
-      .attr("clip-path", (d, i) => `url(#clip-${i})`)
       .on("click", (event, d) => handleIconClick(d));
 
-    nodeElements
+    /* nodeElements
       .append("text")
       .attr("text-anchor", "middle")
       .attr("dy", 40)
-      .text((d) => d.name);
+      .text((d) => d.name); */
 
     const simulation = d3
       .forceSimulation(nodes)
@@ -135,23 +116,6 @@ const NodeLink = (props) => {
     simulation.restart();
   }, [nodes]);
 
-  // const dragstarted = (event, d) => {
-  //   if (!event.active) simulation.alphaTarget(0.3).restart();
-  //   d.fx = d.x;
-  //   d.fy = d.y;
-  // };
-
-  // const dragged = (event, d) => {
-  //   d.fx = event.x;
-  //   d.fy = event.y;
-  // };
-
-  // const dragended = (event, d) => {
-  //   if (!event.active) simulation.alphaTarget(0);
-  //   d.fx = null;
-  //   d.fy = null;
-  // };
-
   const handleIconClick = (node) => {
     node.setSelectGameIdx(node.id);
   };
@@ -163,15 +127,35 @@ const NodeLink = (props) => {
           <line
             key={i}
             className="link"
-            x1={link.source.x}
+            /*             x1={link.source.x}
             y1={link.source.y}
             x2={link.target.x}
-            y2={link.target.y}
+            y2={link.target.y} */
             style={{ stroke: "#999", strokeWidth: 0.5 }}
           />
         ))}
       </g>
-      <g className="nodes"></g>
+      <g className="nodes">
+        {nodes.map((node, i) => {
+          return node.x !== undefined ? (
+            <g
+              className="node"
+              transform={`translate(${node.x},${node.y})`}
+              key={i}
+            >
+              <image
+                href={node.header_image}
+                width="75"
+                height="60"
+                x="-37.5"
+                y="-30"
+              ></image>
+            </g>
+          ) : (
+            <div key={i}></div>
+          );
+        })}
+      </g>
     </svg>
   );
 };

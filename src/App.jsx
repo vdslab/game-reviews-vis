@@ -53,6 +53,7 @@ const App = () => {
                   key: i,
                 }))}
                 selectGameIdx={selectGameIdx}
+                setSelectGameIdx={setSelectGameIdx}
               />
             ) : (
               <h2>Loading...</h2>
