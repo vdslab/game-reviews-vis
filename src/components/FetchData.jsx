@@ -2,58 +2,34 @@ import jsonData from "./../../data.json";
 import Wordcloud from "./Wordcloud";
 
 const FetchData = (props) => {
-  /* (async () => {
-    const reviewsResponse = await fetch("https://steamspy.com/api.php");
-
-    if (!reviewsResponse.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await reviewsResponse.json();
-    console.log(data);
-  })();
-
-  (async () => {
-    const reviewsResponse = await fetch(
-      "https://store.steampowered.com/appreviews/1097150?json=1&filter=recent&num_per_page=100"
-    );
-
-    if (!reviewsResponse.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await reviewsResponse.json();
-    console.log(data);
-  })(); */
   const { setData } = props;
 
-  const gameIds = [1063730, 1172470];
-  const gameData = {};
+  const gameIds = jsonData.appid;
 
   const fetchData = async () => {
     try {
       const gameDataPromises = gameIds.map(async (gameId) => {
         const steamReviewsResponse = await fetch(
-          `/steam/appreviews/${gameId}?json=1&filter=recent&num_per_page=10`
+          `/steam/appreviews/${gameId}?json=1&filter=recent&num_per_page=50&language=english`
         );
         const steamReviewsData = await steamReviewsResponse.json();
-        // console.log(steamReviewsData);
 
         const steamDetailsResponse = await fetch(
           `/steam/api/appdetails?appids=${gameId}`
         );
+
         const steamDetailsData = await steamDetailsResponse.json();
-        // console.log(data2);
+
+        if (!steamDetailsData[gameId].success) return;
+        console.log(steamDetailsData[gameId].success);
 
         const extractedData = {
-          gameName: steamDetailsData[gameId].data.name,
+          name: steamDetailsData[gameId].data.name,
           genres: steamDetailsData[gameId].data
             ? steamDetailsData[gameId].data.genres
             : [],
-          // genres: data2[gameId]?.data?.genres?.map((genre) => genre.description) || [],
           header_image: steamDetailsData[gameId].data
             ? steamDetailsData[gameId].data.header_image
-            : "",
-          name: steamDetailsData[gameId].data
-            ? steamDetailsData[gameId].data.name
             : "",
           reviews: steamReviewsData.reviews
             ? steamReviewsData.reviews.map((review) => ({
@@ -61,22 +37,21 @@ const FetchData = (props) => {
                 voted_up: review.voted_up,
               }))
             : [],
-          wordcloud: steamReviewsData.wordcloud
-            ? steamReviewsData.wordcloud
-            : [],
         };
 
-        return { [gameId]: extractedData };
+        return extractedData;
       });
 
       const gameDataArray = await Promise.all(gameDataPromises);
-      const gameData = gameDataArray.reduce((acc, gameData) => {
-        const key = Object.keys(gameData)[0];
-        return { ...acc, [key]: gameData[key] };
-      }, {});
 
-      setData(jsonData);
-      console.log(gameData);
+      const gameData = gameDataArray
+        .reduce((acc, gameData) => {
+          acc.push(gameData);
+          return acc;
+        }, [])
+        .filter((e) => e);
+
+      Wordcloud({ data: gameData, setData });
 
       /* steam api */
       // const reviewsResponse  = await fetch("/api/appreviews/1097150?json=1&filter=recent&num_per_page=100");
