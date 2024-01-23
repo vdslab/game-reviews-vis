@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import Icon from "./components/Icon";
 import FetchData from "./components/FetchData";
 import NodeLink from "./components/NodeLink";
+import tfidf from "./components/TFIDF";
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -36,7 +37,8 @@ const App = () => {
     FetchData({ setData });
   }, []);
 
-  console.log(selectGameIdx);
+  console.log(data);
+
   return (
     <div>
       <Header></Header>
