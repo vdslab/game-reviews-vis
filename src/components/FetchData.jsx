@@ -2,9 +2,17 @@ import jsonData from "./../../data.json";
 import Wordcloud from "./Wordcloud";
 
 const FetchData = (props) => {
-  const { setData } = props;
+  const { setData, addData, setSelectGameIdx } = props;
+  
+  let gameIds;
+  if (addData == 0) {
+    gameIds = jsonData.appid;
+  } else {
+    gameIds = [...jsonData.appid, parseInt(addData, 10)];
+  }
 
-  const gameIds = jsonData.appid;
+  console.log(gameIds);
+  // const gameIds = jsonData.appid;
 
   const fetchData = async () => {
     try {
@@ -77,6 +85,11 @@ const FetchData = (props) => {
     }
   };
   fetchData();
+
+  // if (addData == 0) {
+  // } else {
+  //   setSelectGameIdx(gameIds.length-1);
+  // }
 };
 
 export default FetchData;

@@ -13,6 +13,7 @@ import NodeLink from "./components/NodeLink";
 
 const App = () => {
   const [data, setData] = useState([]);
+  const [addData, setAddData] = useState([]);
   const [selectGameIdx, setSelectGameIdx] = useState(0);
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -33,13 +34,17 @@ const App = () => {
   };
 
   useEffect(() => {
-    FetchData({ setData });
+    FetchData({ setData, addData });
   }, []);
+
+  useEffect(() => {
+    FetchData({ setData, addData, setSelectGameIdx });
+  }, [addData]);
 
   console.log(selectGameIdx);
   return (
     <div>
-      <Header></Header>
+      <Header setAddData={setAddData}></Header>
       <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
         <Grid item xs={8}>
           <Item square>
