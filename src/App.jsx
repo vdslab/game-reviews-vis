@@ -68,7 +68,7 @@ const App = () => {
         </Grid>
         <Grid item xs={4}>
           <Item square>
-            <div style={{ backgroundColor: "lightgray" }}>
+            <div style={{ backgroundColor: "lightgray", padding:"10px"}}>
               {data.length !== 0 ? (
                 <div>
                   <Grid container spacing={0} justifyContent="flex-end">
@@ -103,6 +103,12 @@ const App = () => {
                   <div style={{ fontSize: "30px" }}>
                     {data[selectGameIdx].name}
                   </div>
+                  <div style={{ display: 'flex', justifyContent: 'center', fontSize: '16px' }}>
+                    {data[selectGameIdx].genres.map((genre, index) => (
+                      <div key={index} style={{ marginRight: '10px' }}>{genre.description}</div>
+                    ))}
+                  </div>
+                  
                 </div>
               ) : (
                 <h2>Loading...</h2>
