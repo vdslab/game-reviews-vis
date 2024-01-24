@@ -6,25 +6,23 @@ import Icon from "./Icon";
 const NodeLink = (props) => {
   const { data, setSelectGameIdx } = props;
   const chartRef = useRef();
+  const k = 5;
 
+  console.log(data);
   const nodes = Object.values(data).map((node, index) => ({
     id: index,
     name: node.name,
     header_image: node.header_image,
     wordcloud: node.wordcloud,
     setSelectGameIdx: node.setSelectGameIdx,
+    TfIdf: node.TfIdf,
   }));
+
+  console.log(nodes);
 
   /* const links = nodes.map((_, i) => {
     return { source: selectGameIdx, target: i };
   }); */
-
-  const links = [];
-  for (let i = 0; i < nodes.length - 1; i++) {
-    for (let j = i + 1; j < nodes.length; j++) {
-      links.push({ source: i, target: j });
-    }
-  }
 
   const calcWeight = (arr1, arr2) => {
     const map1 = new Map();
@@ -52,6 +50,40 @@ const NodeLink = (props) => {
 
     return sum;
   };
+
+  const links = [];
+
+  for (let i = 0; i < nodes.length; i++) {
+    const c =
+      k - links.filter((item) => item.source === i || item.target === i).length;
+    //console.log(count);
+    const ngIndex = links
+      .filter((item) => item.target === i)
+      .map((item) => item.source);
+    console.log(ngIndex);
+
+    const array = nodes
+      .map((node, index) => {
+        return {
+          index,
+          weight: i !== index ? calcWeight(nodes[i].TfIdf, node.TfIdf) : 0,
+        };
+      })
+      .filter((e) => e);
+    array.sort((a, b) => b.weight - a.weight);
+    console.log(array);
+    const newArray = array.slice(0, c).map((item) => item.index);
+    console.log(newArray);
+    newArray.forEach((index) => {
+      const count = links.filter(
+        (item) => item.source === index || item.target === index
+      ).length;
+      if (count < 5) {
+        links.push({ source: i, target: index });
+      }
+    });
+  }
+  console.log(links);
 
   useEffect(() => {
     const width = window.innerWidth;
@@ -106,7 +138,9 @@ const NodeLink = (props) => {
           .forceLink(links)
           .id((d) => d.id)
           .distance((item) => {
-            return calcWeight(item.source.wordcloud, item.target.wordcloud);
+            return (
+              0.3 * calcWeight(item.source.wordcloud, item.target.wordcloud)
+            );
           })
       )
       .force("charge", d3.forceManyBody().strength(-100))

@@ -54,14 +54,11 @@ const App = () => {
     item.TFIDF = TFIDF[index];
   });
 
-  console.log(data);
   // console.log(data.length);
 
   // if (data.length !== 0) {
   //   console.log(data[selectGameIdx].wordcloud);
   // }
-
-  console.log(TFIDF);
 
   return (
     <div>
@@ -69,7 +66,7 @@ const App = () => {
       <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
         <Grid item xs={8}>
           <Item square>
-            {data.length !== 0 ? (
+            {data.length !== 0 && data[0].TFIDF ? (
               <NodeLink
                 data={data.map((item, i) => ({
                   name: item.name,
@@ -79,11 +76,10 @@ const App = () => {
                   wordcloud: item.wordcloud,
                   key: i,
                   reviews: item.reviews,
+                  TfIdf: item.TFIDF,
                 }))}
-                d={data}
                 selectGameIdx={selectGameIdx}
                 setSelectGameIdx={setSelectGameIdx}
-                setData={setData}
               />
             ) : (
               <h2>Loading...</h2>

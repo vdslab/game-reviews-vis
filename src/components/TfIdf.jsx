@@ -1,10 +1,9 @@
 import React, { useEffect, useRef } from "react";
 
 export const TfIdf = (props) => {
-  console.log(props);
   const data = props;
 
-  console.log(data);
+  //console.log(data);
   //レビューだけを抽出
 
   const documents = data.map((data) =>
@@ -209,7 +208,6 @@ export const TfIdf = (props) => {
     })
   );
 
-  console.log(unique);
   //除かない
   const wordsArray = documents.map((item) => {
     const allWords = [];
