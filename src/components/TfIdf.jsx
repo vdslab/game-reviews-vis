@@ -194,7 +194,9 @@ export const TfIdf = (props) => {
     const uniqueWords = new Set();
     item.forEach((review) => {
       review.split(/\s+/).forEach((word) => {
-        uniqueWords.add(word);
+        if (word.length > 1 && /^[a-zA-Z]+$/.test(word)) {
+          uniqueWords.add(word);
+        }
       });
     });
 
