@@ -1,3 +1,8 @@
 body {
   user-select: none;
 }
+
+.node.selected image {
+  background-color: blueviolet;
+  outline: 4px solid red;
+}

@@ -7,8 +7,14 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import FetchData from "./FetchData";
+// import FetchData from "./FetchData";
+import Paper from "@mui/material/Paper";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import FetchSearchTermTGameId from "./FetchSearchTermTGameId";
 import { useState, useEffect } from "react";
+import jsonData from "./../../gameidData.json";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -52,11 +58,29 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar(props) {
-  const { setAddData } = props;
+  const { setAddData, setSelectGameIdx } = props;
+  const [addGameId, setAddGameId] = useState(0);
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  
 
-  const setSearchTermFunc = (tar) => {
-    setAddData(tar);
+  const setSearchTermTGameId = (tar) => {
+    if(tar.length > 10)
+      FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions  });
+    //    setAddData(tar);
   };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTermTGameId(suggestion);
+    const selectedApp = jsonData.applist.apps.find((app) => app.name === suggestion);
+    if (selectedApp) {
+      setAddData(selectedApp.appid);
+    }
+    setSearchSuggestions([]); // カーソルを外す
+  };
+
+  useEffect(() => {
+    setAddData(addGameId);
+  }, [addGameId]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -86,7 +110,18 @@ export default function SearchAppBar(props) {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
-              onChange={(e) => setSearchTermFunc(e.target.value)}            />
+              onChange={(e) => setSearchTermTGameId(e.target.value)}            />
+              {searchSuggestions.length > 1 && (
+                <Paper sx={{ position: 'absolute', zIndex: 1, left: 0, right: 0, mt: 1 }}>
+                  <List>
+                    {searchSuggestions.slice(0, 3).map((suggestion) => (
+                      <ListItem button key={suggestion} onClick={() => handleSuggestionClick(suggestion)}>
+                        <ListItemText primary={suggestion} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Paper>
+              )}
           </Search>
         </Toolbar>
       </AppBar>
