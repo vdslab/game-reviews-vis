@@ -113,7 +113,7 @@ export default function SearchAppBar(props) {
               {searchSuggestions.length > 1 && (
                 <Paper sx={{ position: 'absolute', zIndex: 1, left: 0, right: 0, mt: 1 }}>
                   <List>
-                    {searchSuggestions.map((suggestion) => (
+                    {searchSuggestions.slice(0, 3).map((suggestion) => (
                       <ListItem button key={suggestion} onClick={() => handleSuggestionClick(suggestion)}>
                         <ListItemText primary={suggestion} />
                       </ListItem>
