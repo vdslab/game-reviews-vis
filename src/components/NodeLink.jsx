@@ -72,7 +72,8 @@ const NodeLink = (props) => {
       .data(nodes)
       .enter()
       .append("g") //
-      .attr("class", "node"); //
+      .attr("class", "node") //
+      .classed("selected", (d) => d.id === selectGameIdx);
 
     nodeElements
       .append("image")

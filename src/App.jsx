@@ -44,7 +44,7 @@ const App = () => {
   console.log(selectGameIdx);
   return (
     <div>
-      <Header setAddData={setAddData}></Header>
+      <Header setAddData={setAddData} setSelectGameIdx={setSelectGameIdx}></Header>
       <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
         <Grid item xs={8}>
           <Item square>
@@ -103,11 +103,12 @@ const App = () => {
                   <div style={{ fontSize: "30px" }}>
                     {data[selectGameIdx].name}
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'center', fontSize: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'center', fontSize: '16px', maxWidth: '100%' }}>
                     {data[selectGameIdx].genres.map((genre, index) => (
-                      <div key={index} style={{ marginRight: '10px' }}>{genre.description}</div>
+                      <div key={index} style={{ marginRight: '10px', wordWrap: 'break-word' }}>{genre.description}</div>
                     ))}
                   </div>
+
                   
                 </div>
               ) : (
