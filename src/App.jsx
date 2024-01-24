@@ -10,11 +10,14 @@ import Header from "./components/Header";
 import Icon from "./components/Icon";
 import FetchData from "./components/FetchData";
 import NodeLink from "./components/NodeLink";
+import { TfIdf } from "./components/TfIdf";
 
 const App = () => {
   const [data, setData] = useState([]);
   const [addData, setAddData] = useState([]);
   const [selectGameIdx, setSelectGameIdx] = useState(0);
+  const [TFIDF, setTFIDF] = useState([]);
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -41,7 +44,25 @@ const App = () => {
     FetchData({ setData, addData, setSelectGameIdx });
   }, [addData]);
 
-  console.log(selectGameIdx);
+  useEffect(() => {
+    if (data.length !== 0) {
+      setTFIDF(TfIdf(data));
+    }
+  }, [data]);
+
+  data.map((item, index) => {
+    item.TFIDF = TFIDF[index];
+  });
+
+  console.log(data);
+  // console.log(data.length);
+
+  // if (data.length !== 0) {
+  //   console.log(data[selectGameIdx].wordcloud);
+  // }
+
+  console.log(TFIDF);
+
   return (
     <div>
       <Header setAddData={setAddData}></Header>
@@ -57,9 +78,12 @@ const App = () => {
                   setSelectGameIdx: setSelectGameIdx,
                   wordcloud: item.wordcloud,
                   key: i,
+                  reviews: item.reviews,
                 }))}
+                d={data}
                 selectGameIdx={selectGameIdx}
                 setSelectGameIdx={setSelectGameIdx}
+                setData={setData}
               />
             ) : (
               <h2>Loading...</h2>
@@ -68,7 +92,7 @@ const App = () => {
         </Grid>
         <Grid item xs={4}>
           <Item square>
-            <div style={{ backgroundColor: "lightgray", padding:"10px"}}>
+            <div style={{ backgroundColor: "lightgray", padding: "10px" }}>
               {data.length !== 0 ? (
                 <div>
                   <Grid container spacing={0} justifyContent="flex-end">
@@ -89,26 +113,39 @@ const App = () => {
                       高評価
                     </Grid>
                   </Grid>
-                  <WordCloud
-                    data={data[selectGameIdx].wordcloud}
-                    fontSize={fontSizeMapper}
-                    width={100}
-                    height={100}
-                    rotate={0}
-                    padding={0}
-                    onWordClick={(event, d) => console.log(d.text)}
-                    fill={(word) => getColor(word.rating)}
-                  ></WordCloud>
+                  {TFIDF.length !== 0 ? (
+                    <div>
+                      <WordCloud
+                        data={data[selectGameIdx].TFIDF}
+                        fontSize={fontSizeMapper}
+                        width={100}
+                        height={100}
+                        rotate={0}
+                        padding={0}
+                        onWordClick={(event, d) => console.log(d.text)}
+                        //fill={(word) => getColor(word.rating)}
+                      ></WordCloud>
+                    </div>
+                  ) : (
+                    <h2>Loading...</h2>
+                  )}
 
                   <div style={{ fontSize: "30px" }}>
                     {data[selectGameIdx].name}
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'center', fontSize: '16px' }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      fontSize: "16px",
+                    }}
+                  >
                     {data[selectGameIdx].genres.map((genre, index) => (
-                      <div key={index} style={{ marginRight: '10px' }}>{genre.description}</div>
+                      <div key={index} style={{ marginRight: "10px" }}>
+                        {genre.description}
+                      </div>
                     ))}
                   </div>
-                  
                 </div>
               ) : (
                 <h2>Loading...</h2>

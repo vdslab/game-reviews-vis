@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import Icon from "./Icon";
 
 const NodeLink = (props) => {
-  const { data, selectGameIdx } = props;
+  const { data, selectGameIdx, setData, d } = props;
   const chartRef = useRef();
 
   const calcWeight = (arr1, arr2) => {
@@ -40,6 +40,7 @@ const NodeLink = (props) => {
     header_image: node.header_image,
     wordcloud: node.wordcloud,
     setSelectGameIdx: node.setSelectGameIdx,
+    reviews: node.reviews,
   }));
 
   const links = [];
@@ -80,8 +81,8 @@ const NodeLink = (props) => {
       .attr("width", 75)
       .attr("height", 60)
       .attr("x", -37.5)
-      .attr("y", -30)
-      .on("click", (event, d) => handleIconClick(d));
+      .attr("y", -30);
+    // .on("click", (event, d) => handleIconClick(d));
 
     /* nodeElements
       .append("text")
@@ -117,9 +118,9 @@ const NodeLink = (props) => {
     simulation.restart();
   }, [nodes]);
 
-  const handleIconClick = (node) => {
-    node.setSelectGameIdx(node.id);
-  };
+  // const handleIconClick = (node) => {
+  //   node.setSelectGameIdx(node.id);
+  // };
 
   return (
     <svg ref={chartRef} width={window.innerWidth} height={window.innerHeight}>
