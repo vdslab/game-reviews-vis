@@ -1,10 +1,30 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
 import Icon from "./Icon";
 
 const NodeLink = (props) => {
-  const { data, selectGameIdx } = props;
+  const { data, setSelectGameIdx } = props;
+  const chartRef = useRef();
+
+  const nodes = Object.values(data).map((node, index) => ({
+    id: index,
+    name: node.name,
+    header_image: node.header_image,
+    wordcloud: node.wordcloud,
+    setSelectGameIdx: node.setSelectGameIdx,
+  }));
+
+  /* const links = nodes.map((_, i) => {
+    return { source: selectGameIdx, target: i };
+  }); */
+
+  const links = [];
+  for (let i = 0; i < nodes.length - 1; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      links.push({ source: i, target: j });
+    }
+  }
 
   const calcWeight = (arr1, arr2) => {
     const map1 = new Map();
@@ -33,36 +53,11 @@ const NodeLink = (props) => {
     return sum;
   };
 
-  const [nodes, setNodes] = useState(
-    Object.values(data).map((node, index) => ({
-      id: index,
-      name: node.name,
-      header_image: node.header_image,
-      wordcloud: node.wordcloud,
-      setSelectGameIdx: node.setSelectGameIdx,
-    }))
-  );
-
-  const [links, setLinks] = useState([]);
-
   useEffect(() => {
-    const newNodes = [...nodes];
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    const l = [];
-    for (let i = 0; i < nodes.length - 1; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const count = calcWeight(nodes[i].wordcloud, nodes[j].wordcloud);
-        if (count > 300) {
-          l.push({ source: i, target: j });
-        }
-      }
-    }
-
-    setLinks(l);
-
-    /* const svg = d3.select(chartRef.current);
+    const svg = d3.select(chartRef.current);
 
     svg
       .selectAll(".link")
@@ -71,14 +66,21 @@ const NodeLink = (props) => {
       .append("line")
       .attr("class", "link")
       .style("stroke", "gray")
-      .style("stroke-width", 1);
+      .style("stroke-width", 0.5);
 
     const nodeElements = svg
       .selectAll(".node")
       .data(nodes)
       .enter()
-      .append("g") //
-      .attr("class", "node"); //
+      .append("g")
+      .attr("class", "node");
+
+    nodeElements
+      .append("defs")
+      .append("clipPath")
+      .attr("id", (d, i) => `clip-${i}`)
+      .append("circle")
+      .attr("r", 17);
 
     nodeElements
       .append("image")
@@ -87,7 +89,8 @@ const NodeLink = (props) => {
       .attr("height", 60)
       .attr("x", -37.5)
       .attr("y", -30)
-      .on("click", (event, d) => handleIconClick(d)); */
+      .attr("clip-path", (d, i) => `url(#clip-${i})`)
+      .on("click", (event, d) => handleIconClick(d));
 
     /* nodeElements
       .append("text")
@@ -96,7 +99,7 @@ const NodeLink = (props) => {
       .text((d) => d.name); */
 
     const simulation = d3
-      .forceSimulation(newNodes)
+      .forceSimulation(nodes)
       .force(
         "link",
         d3
@@ -109,32 +112,28 @@ const NodeLink = (props) => {
       .force("charge", d3.forceManyBody().strength(-100))
       .force("center", d3.forceCenter(width / 3, height / 2));
 
-    /* simulation.on("tick", () => {
-      /* svg
+    simulation.on("tick", () => {
+      svg
         .selectAll(".link")
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
-        .attr("y2", (d) => d.target.y); */
+        .attr("y2", (d) => d.target.y);
 
-    // nodeElements.attr("transform", (d) => `translate(${d.x},${d.y})`);
-    //});
+      nodeElements.attr("transform", (d) => `translate(${d.x},${d.y})`);
+    });
 
-    console.log(simulation);
-    console.log(newNodes);
-    console.log(links);
+    simulation.restart();
+  }, [nodes]);
 
-    setNodes(newNodes);
-
-    //simulation.restart();
-  }, []);
-
-  console.log(nodes);
+  const handleIconClick = (node) => {
+    setSelectGameIdx(node.id);
+  };
 
   return (
-    <svg width={window.innerWidth} height={window.innerHeight}>
+    <svg ref={chartRef} width={window.innerWidth} height={window.innerHeight}>
       <g className="links">
-        {links.map((link, i) => (
+        {/* {links.map((link, i) => (
           <line
             key={i}
             className="link"
@@ -144,29 +143,9 @@ const NodeLink = (props) => {
             y2={link.target.y}
             style={{ stroke: "#999", strokeWidth: 0.5 }}
           />
-        ))}
+        ))} */}
       </g>
-      <g className="nodes">
-        {nodes.map((node, i) => {
-          return node.x !== undefined ? (
-            <g
-              className="node"
-              transform={`translate(${node.x},${node.y})`}
-              key={i}
-            >
-              <image
-                href={node.header_image}
-                width="75"
-                height="60"
-                x="-37.5"
-                y="-30"
-              ></image>
-            </g>
-          ) : (
-            <div key={i}></div>
-          );
-        })}
-      </g>
+      <g className="nodes"></g>
     </svg>
   );
 };

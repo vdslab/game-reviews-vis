@@ -10,7 +10,6 @@ import Header from "./components/Header";
 import Icon from "./components/Icon";
 import FetchData from "./components/FetchData";
 import NodeLink from "./components/NodeLink";
-import tfidf from "./components/TFIDF";
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -51,18 +50,7 @@ const App = () => {
         <Grid item xs={8}>
           <Item square>
             {data.length !== 0 ? (
-              <NodeLink
-                data={data.map((item, i) => ({
-                  name: item.name,
-                  header_image: item.header_image,
-                  index: i + 1,
-                  setSelectGameIdx: setSelectGameIdx,
-                  wordcloud: item.wordcloud,
-                  key: i,
-                }))}
-                selectGameIdx={selectGameIdx}
-                setSelectGameIdx={setSelectGameIdx}
-              />
+              <NodeLink data={data} setSelectGameIdx={setSelectGameIdx} />
             ) : (
               <h2>Loading...</h2>
             )}
