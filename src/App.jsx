@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import Icon from "./components/Icon";
 import FetchData from "./components/FetchData";
 import NodeLink from "./components/NodeLink";
+import tfidf from "./components/TFIDF";
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -41,7 +42,8 @@ const App = () => {
     FetchData({ setData, addData, setSelectGameIdx });
   }, [addData]);
 
-  console.log(selectGameIdx);
+  console.log(data);
+
   return (
     <div>
       <Header setAddData={setAddData}></Header>
@@ -68,7 +70,7 @@ const App = () => {
         </Grid>
         <Grid item xs={4}>
           <Item square>
-            <div style={{ backgroundColor: "lightgray", padding:"10px"}}>
+            <div style={{ backgroundColor: "lightgray", padding: "10px" }}>
               {data.length !== 0 ? (
                 <div>
                   <Grid container spacing={0} justifyContent="flex-end">
@@ -103,12 +105,19 @@ const App = () => {
                   <div style={{ fontSize: "30px" }}>
                     {data[selectGameIdx].name}
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'center', fontSize: '16px' }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      fontSize: "16px",
+                    }}
+                  >
                     {data[selectGameIdx].genres.map((genre, index) => (
-                      <div key={index} style={{ marginRight: '10px' }}>{genre.description}</div>
+                      <div key={index} style={{ marginRight: "10px" }}>
+                        {genre.description}
+                      </div>
                     ))}
                   </div>
-                  
                 </div>
               ) : (
                 <h2>Loading...</h2>
