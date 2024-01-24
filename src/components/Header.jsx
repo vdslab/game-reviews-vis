@@ -8,6 +8,7 @@ import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import FetchData from "./FetchData";
+import FetchSearchTermTGameId from "./FetchSearchTermTGameId";
 import { useState, useEffect } from "react";
 
 const Search = styled("div")(({ theme }) => ({
@@ -53,8 +54,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchAppBar(props) {
   const { setAddData } = props;
+  const [addGameId, setAddGameId] = useState(0);
 
-  const setSearchTermFunc = (tar) => {
+
+  const setSearchTermTGameId = (tar) => {
+    // FetchSearchTermTGameId({ tar, addGameId });
     setAddData(tar);
   };
 
@@ -86,7 +90,7 @@ export default function SearchAppBar(props) {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
-              onChange={(e) => setSearchTermFunc(e.target.value)}            />
+              onChange={(e) => setSearchTermTGameId(e.target.value)}            />
           </Search>
         </Toolbar>
       </AppBar>
