@@ -58,9 +58,13 @@ export default function SearchAppBar(props) {
 
 
   const setSearchTermTGameId = (tar) => {
-    // FetchSearchTermTGameId({ tar, addGameId });
-    setAddData(tar);
+    FetchSearchTermTGameId({ tar, setAddGameId });
+    //    setAddData(tar);
   };
+
+  useEffect(() => {
+    setAddData(addGameId);
+  }, [addGameId]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
