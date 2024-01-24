@@ -75,6 +75,7 @@ export default function SearchAppBar(props) {
     if (selectedApp) {
       setAddData(selectedApp.appid);
     }
+    setSearchSuggestions([]); // カーソルを外す
   };
 
   useEffect(() => {
