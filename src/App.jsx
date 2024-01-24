@@ -10,11 +10,14 @@ import Header from "./components/Header";
 import Icon from "./components/Icon";
 import FetchData from "./components/FetchData";
 import NodeLink from "./components/NodeLink";
+import { TfIdf } from "./components/TfIdf";
 
 const App = () => {
   const [data, setData] = useState([]);
   const [addData, setAddData] = useState([]);
   const [selectGameIdx, setSelectGameIdx] = useState(0);
+  const [TFIDF, setTFIDF] = useState([]);
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -41,19 +44,47 @@ const App = () => {
     FetchData({ setData, addData, setSelectGameIdx });
   }, [addData]);
 
+  useEffect(() => {
+    if (data.length !== 0) {
+      setTFIDF(TfIdf(data));
+    }
+  }, [data]);
+
+  data.map((item, index) => {
+    item.TFIDF = TFIDF[index];
+  });
+
   console.log(data);
+  // console.log(data.length);
+
+  // if (data.length !== 0) {
+  //   console.log(data[selectGameIdx].wordcloud);
+  // }
+
+  console.log(TFIDF);
 
   return (
     <div>
-      <Header
-        setAddData={setAddData}
-        setSelectGameIdx={setSelectGameIdx}
-      ></Header>
+      <Header setAddData={setAddData}></Header>
       <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
         <Grid item xs={8}>
           <Item square>
             {data.length !== 0 ? (
-              <NodeLink data={data} setSelectGameIdx={setSelectGameIdx} />
+              <NodeLink
+                data={data.map((item, i) => ({
+                  name: item.name,
+                  header_image: item.header_image,
+                  index: i + 1,
+                  setSelectGameIdx: setSelectGameIdx,
+                  wordcloud: item.wordcloud,
+                  key: i,
+                  reviews: item.reviews,
+                }))}
+                d={data}
+                selectGameIdx={selectGameIdx}
+                setSelectGameIdx={setSelectGameIdx}
+                setData={setData}
+              />
             ) : (
               <h2>Loading...</h2>
             )}
@@ -82,16 +113,22 @@ const App = () => {
                       高評価
                     </Grid>
                   </Grid>
-                  <WordCloud
-                    data={data[selectGameIdx].wordcloud}
-                    fontSize={fontSizeMapper}
-                    width={100}
-                    height={100}
-                    rotate={0}
-                    padding={0}
-                    onWordClick={(event, d) => console.log(d.text)}
-                    fill={(word) => getColor(word.rating)}
-                  ></WordCloud>
+                  {TFIDF.length !== 0 ? (
+                    <div>
+                      <WordCloud
+                        data={data[selectGameIdx].TFIDF}
+                        fontSize={fontSizeMapper}
+                        width={100}
+                        height={100}
+                        rotate={0}
+                        padding={0}
+                        onWordClick={(event, d) => console.log(d.text)}
+                        //fill={(word) => getColor(word.rating)}
+                      ></WordCloud>
+                    </div>
+                  ) : (
+                    <h2>Loading...</h2>
+                  )}
 
                   <div style={{ fontSize: "30px" }}>
                     {data[selectGameIdx].name}
