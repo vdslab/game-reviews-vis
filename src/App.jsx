@@ -118,7 +118,7 @@ const App = () => {
                       高評価
                     </Grid>
                   </Grid>
-                  {isTFIDFReady ? (
+                  {data[0].TFIDF ? (
                     <div>
                       <WordCloud
                         data={data[selectGameIdx].TFIDF}
