@@ -43,7 +43,7 @@ const FetchData = (props) => {
               }))
             : [],
         };
-
+        
         return extractedData;
       });
 
@@ -80,7 +80,7 @@ const FetchData = (props) => {
       // console.log(steamSpyData);
     } catch (error) {
       console.error("Error fetching data:", error.message);
-      setTimeout(() => fetchData(), 2000); // 2秒後に再度 fetch
+      
     }
   };
   fetchData();

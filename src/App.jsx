@@ -40,6 +40,7 @@ const App = () => {
   useEffect(() => {
     FetchData({ setData, addData, setSelectGameIdx });
   }, [,addData]);
+  
 
   useEffect(() => {
     if (data.length !== 0) {
@@ -68,7 +69,7 @@ const App = () => {
       <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
         <Grid item xs={8}>
           <Item square>
-            {data.length !== 0 && data[0].TFIDF ? (
+            {data.length !== 0 && data[data.length-1].TFIDF ? (
               <NodeLink
                 data={data.map((item, i) => ({
                   name: item.name,
@@ -112,7 +113,7 @@ const App = () => {
                       高評価
                     </Grid>
                   </Grid>
-                  {data[0].TFIDF ? (
+                  {data[data.length-1].TFIDF ? (
                     <div>
                       <WordCloud
                         data={data[selectGameIdx].TFIDF}
