@@ -242,16 +242,16 @@ const NodeLink = (props) => {
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
-        .attr("y2", (d) => d.target.y)
+        /*  .attr("y2", (d) => d.target.y)
         .style(
           "stroke-width",
           (d) =>
             0.008 *
             (calcCommonGenres(d.source.genres, d.target.genres) + 1) *
             calcWeight(d.source.TfIdf, d.target.TfIdf)
-        );
+        ); */
 
-      /* .attr("y2", (d) => d.target.y)
+        .attr("y2", (d) => d.target.y)
         .style("stroke", (d) => {
           const selectFlag =
             d.source.id === selectGameIdx || d.target.id === selectGameIdx;
@@ -261,7 +261,7 @@ const NodeLink = (props) => {
           const selectFlag =
             d.source.id === selectGameIdx || d.target.id === selectGameIdx;
           return selectFlag ? "3" : "0.5";
-        }); */
+        });
 
       nodeElements.attr("transform", (d) => `translate(${d.x},${d.y})`);
     });
