@@ -64,7 +64,7 @@ const App = () => {
         }
       });
     });
-  }, [TFIDF]);
+  }, [data,TFIDF]);
 
   return (
     <div>
