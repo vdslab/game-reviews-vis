@@ -52,7 +52,6 @@ const App = () => {
   }, [TFIDF]);
 
   useEffect(() => {
-    if(data){
     data.forEach((item, index) => {
       item.TFIDF = TFIDF[index];
 
@@ -64,8 +63,8 @@ const App = () => {
           tfidfword.rating = findWord.rating;
         }
       });
-    });}
-  }, [data,TFIDF]);
+    });
+  }, [TFIDF]);
 
   return (
     <div>
