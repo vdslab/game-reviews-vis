@@ -18,7 +18,6 @@ const App = () => {
   const [selectWord, setSelectWord] = useState("");
   const [selectGameIdx, setSelectGameIdx] = useState(0);
   const [TFIDF, setTFIDF] = useState([]);
-  const [isTFIDFReady, setIsTFIDFReady] = useState(false);
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -50,23 +49,19 @@ const App = () => {
   }, [data]);
 
   useEffect(() => {
-    if (TFIDF.length !== 0) {
-      data.forEach((item, index) => {
-        item.TFIDF = TFIDF[index];
+    data.forEach((item, index) => {
+      item.TFIDF = TFIDF[index];
 
-        item.TFIDF.forEach((tfidfword) => {
-          const findWord = item.wordcloud.find(
-            (word) => word.text === tfidfword.text
-          );
-          if (findWord) {
-            tfidfword.rating = findWord.rating;
-          }
-        });
+      item.TFIDF.forEach((tfidfword) => {
+        const findWord = item.wordcloud.find(
+          (word) => word.text === tfidfword.text
+        );
+        if (findWord) {
+          tfidfword.rating = findWord.rating;
+        }
       });
-
-      setIsTFIDFReady(true);
-    }
-  }, [TFIDF, data]);
+    });
+  }, [TFIDF]);
 
   return (
     <div>
@@ -74,7 +69,7 @@ const App = () => {
       <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
         <Grid item xs={8}>
           <Item square>
-            {isTFIDFReady  ? (
+            {data.length !== 0 && data[0].TFIDF ? (
               <NodeLink
                 data={data.map((item, i) => ({
                   name: item.name,
