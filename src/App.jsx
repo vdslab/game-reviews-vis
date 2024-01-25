@@ -49,7 +49,7 @@ const App = () => {
     if (data.length !== 0) {
       setTFIDF(TfIdf(data));
     }
-  }, [TFIDF]);
+  }, [data]);
 
   useEffect(() => {
     data.forEach((item, index) => {
@@ -83,7 +83,6 @@ const App = () => {
                   key: i,
                   reviews: item.reviews,
                   TfIdf: item.TFIDF,
-                  genres: item.genres,
                 }))}
                 selectGameIdx={selectGameIdx}
                 setSelectGameIdx={setSelectGameIdx}
@@ -125,7 +124,7 @@ const App = () => {
                         height={100}
                         rotate={0}
                         padding={0}
-                        /* onWordClick={(_, d) => setSelectWord(d.text)} */
+                        onWordClick={(_, d) => setSelectWord(d.text)}
                         fill={(word) => getColor(word.rating)}
                       ></WordCloud>
                     </div>
