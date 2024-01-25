@@ -38,12 +38,8 @@ const App = () => {
   };
  
   useEffect(() => {
-    FetchData({ setData, addData });
-  }, []);
-
-  useEffect(() => {
     FetchData({ setData, addData, setSelectGameIdx });
-  }, [addData]);
+  }, [,addData]);
 
   useEffect(() => {
     if (data.length !== 0) {
