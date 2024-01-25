@@ -36,7 +36,7 @@ const App = () => {
     const lightness = 50 + (blueflag ? Math.abs(value - 1) : value) * 100;
     return `hsl(${color}, 100%, ${lightness}%)`;
   };
-
+ 
   useEffect(() => {
     FetchData({ setData, addData });
   }, []);
