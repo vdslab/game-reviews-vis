@@ -20,6 +20,7 @@ const NodeLink = (props) => {
     wordcloud: node.wordcloud,
     setSelectGameIdx: node.setSelectGameIdx,
     TfIdf: node.TfIdf,
+    genres: node.genres,
   }));
   const calcWeight = (arr1, arr2) => {
     const map1 = new Map();
@@ -41,17 +42,72 @@ const NodeLink = (props) => {
 
     map1.forEach((value, text) => {
       if (map2.has(text)) {
-        sum += Math.min(value, map2.get(text));
+        sum += (value, map2.get(text)) / 2;
       }
     });
 
     return sum;
   };
+  // console.log(props);
+  console.log(nodes);
+
+  const calcCommonGenres = (game1, game2) => {
+    var count = 0;
+
+    game1.forEach((item) =>
+      game2.forEach((i) => {
+        if (i.id === item.id) {
+          count++;
+        }
+      })
+    );
+    return count;
+  };
+
+  // console.log(links);
+  // const threshold = 5;
+  // const res = {};
+  // nodes.forEach((from, i) => {
+  //   if (i !== nodes.length - 1) {
+  //     const r = [];
+  //     for (let j = 0; j < nodes.length; j++) {
+  //       if (i === j) {
+  //         continue;
+  //       }
+  //       const to = nodes[j];
+  //       const weight = calcWeight(from.TfIdf, to.TfIdf);
+  //       r.push({ weight, id: to.id });
+  //     }
+  //     r.sort((a, b) => a.weight - b.weight);
+  //     res[from.id] = r.slice(0, threshold);
+  //   }
+  // });
+
+  // console.log(res);
+  // const links = [];
+  // nodes.forEach((from, i) => {
+  //   const fid = from.id;
+  //   if (fid in res) {
+  //     console.log(res[fid]);
+  //     res[fid].forEach((t) => {
+  //       links.push({
+  //         source: fid,
+  //         target: t.id,
+  //         weight: t.weight,
+  //       });
+  //     });
+  //   }
+  // });
+  // const dup = []
+  // links.forEach((f, i) => {
+  //   links.forEach(t => {
+  //     // かぶってるやつを消す
+  //   })
+  // })
 
   useEffect(() => {
     const width = window.innerWidth;
     const height = window.innerHeight;
-
     const links = [];
 
     for (let i = 0; i < nodes.length; i++) {
@@ -66,13 +122,20 @@ const NodeLink = (props) => {
         .map((node, index) => {
           return {
             index,
-            weight: i !== index ? calcWeight(nodes[i].TfIdf, node.TfIdf) : 0,
+            weight:
+              i !== index
+                ? (calcCommonGenres(nodes[i].genres, node.genres) + 1) *
+                  calcWeight(nodes[i].TfIdf, node.TfIdf)
+                : 0,
           };
         })
         .filter((e) => e);
       array.sort((a, b) => b.weight - a.weight);
+      const newArray = array
+        .slice(0, c)
+        .map((item) => item.index)
+        .filter((index) => !ngIndex.find((i) => i === index));
 
-      const newArray = array.slice(0, c).map((item) => item.index);
       newArray.forEach((index) => {
         const count = links.filter((item) => item.target === index).length;
         if (count < 5) {
@@ -89,8 +152,8 @@ const NodeLink = (props) => {
       .enter()
       .append("line")
       .attr("class", "link")
-      .style("stroke", "gray")
-      .style("stroke-width", 0.5);
+      .style("stroke", "gray");
+    // .style("stroke-width", {stroke});
 
     const nodeElements = svg
       .selectAll(".node")
@@ -161,19 +224,34 @@ const NodeLink = (props) => {
           .forceLink(links)
           .id((d) => d.id)
           .distance((item) => {
-            return 0.3 * calcWeight(item.source.TfIdf, item.target.TfIdf);
+            return (
+              0.1 *
+              (calcCommonGenres(item.source.genres, item.target.genres) + 1) *
+              calcWeight(item.source.TfIdf, item.target.TfIdf)
+            );
           })
       )
-      .force("charge", d3.forceManyBody().strength(-100))
+
+      .force("charge", d3.forceManyBody().strength(-1000))
       .force("center", d3.forceCenter(width / 3, height / 2));
 
     simulation.on("tick", () => {
+      // console.log(links);
       svg
         .selectAll(".link")
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
         .attr("y2", (d) => d.target.y)
+        .style(
+          "stroke-width",
+          (d) =>
+            0.008 *
+            (calcCommonGenres(d.source.genres, d.target.genres) + 1) *
+            calcWeight(d.source.TfIdf, d.target.TfIdf)
+        );
+
+      /* .attr("y2", (d) => d.target.y)
         .style("stroke", (d) => {
           const selectFlag =
             d.source.id === selectGameIdx || d.target.id === selectGameIdx;
@@ -183,7 +261,8 @@ const NodeLink = (props) => {
           const selectFlag =
             d.source.id === selectGameIdx || d.target.id === selectGameIdx;
           return selectFlag ? "3" : "0.5";
-        });
+        }); */
+
       nodeElements.attr("transform", (d) => `translate(${d.x},${d.y})`);
     });
 

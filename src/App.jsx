@@ -83,6 +83,7 @@ const App = () => {
                   key: i,
                   reviews: item.reviews,
                   TfIdf: item.TFIDF,
+                  genres: item.genres,
                 }))}
                 selectGameIdx={selectGameIdx}
                 setSelectGameIdx={setSelectGameIdx}
