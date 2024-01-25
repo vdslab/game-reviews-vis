@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"  # ビルドコマンドを指定
+
+[[redirects]]  # リダイレクトの設定
+  from = "/steam/*"
+  to = "https://store.steampowered.com/:splat"
+  status = 200
+  force = true
