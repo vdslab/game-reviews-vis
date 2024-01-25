@@ -28,6 +28,8 @@ const NodeLink = (props) => {
     const map1 = new Map();
     const map2 = new Map();
 
+    // console.log(arr1, arr2);
+
     arr1.forEach((item) => {
       if (!map1.has(item.text) || map1.get(item.text) > item.value) {
         map1.set(item.text, item.value);
@@ -44,7 +46,7 @@ const NodeLink = (props) => {
 
     map1.forEach((value, text) => {
       if (map2.has(text)) {
-        sum += Math.min(value, map2.get(text));
+        sum += (value, map2.get(text)) / 2;
       }
     });
 
@@ -56,11 +58,10 @@ const NodeLink = (props) => {
   for (let i = 0; i < nodes.length; i++) {
     const c =
       k - links.filter((item) => item.source === i || item.target === i).length;
-    //console.log(count);
     const ngIndex = links
       .filter((item) => item.target === i)
       .map((item) => item.source);
-    console.log(ngIndex);
+    //console.log(ngIndex.length);
 
     const array = nodes
       .map((node, index) => {
@@ -73,17 +74,56 @@ const NodeLink = (props) => {
     array.sort((a, b) => b.weight - a.weight);
     console.log(array);
     const newArray = array.slice(0, c).map((item) => item.index);
-    console.log(newArray);
+    //console.log(newArray);
     newArray.forEach((index) => {
       const count = links.filter(
         (item) => item.source === index || item.target === index
       ).length;
-      if (count < 5) {
+      if (count < k) {
         links.push({ source: i, target: index });
       }
     });
   }
   console.log(links);
+  // const threshold = 5;
+  // const res = {};
+  // nodes.forEach((from, i) => {
+  //   if (i !== nodes.length - 1) {
+  //     const r = [];
+  //     for (let j = 0; j < nodes.length; j++) {
+  //       if (i === j) {
+  //         continue;
+  //       }
+  //       const to = nodes[j];
+  //       const weight = calcWeight(from.TfIdf, to.TfIdf);
+  //       r.push({ weight, id: to.id });
+  //     }
+  //     r.sort((a, b) => a.weight - b.weight);
+  //     res[from.id] = r.slice(0, threshold);
+  //   }
+  // });
+
+  // console.log(res);
+  // const links = [];
+  // nodes.forEach((from, i) => {
+  //   const fid = from.id;
+  //   if (fid in res) {
+  //     console.log(res[fid]);
+  //     res[fid].forEach((t) => {
+  //       links.push({
+  //         source: fid,
+  //         target: t.id,
+  //         weight: t.weight,
+  //       });
+  //     });
+  //   }
+  // });
+  // const dup = []
+  // links.forEach((f, i) => {
+  //   links.forEach(t => {
+  //     // かぶってるやつを消す
+  //   })
+  // })
 
   useEffect(() => {
     const width = window.innerWidth;
@@ -138,12 +178,15 @@ const NodeLink = (props) => {
           .forceLink(links)
           .id((d) => d.id)
           .distance((item) => {
-            return (
-              0.3 * calcWeight(item.source.wordcloud, item.target.wordcloud)
-            );
+            // console.log(
+            //   // calcWeight(item.source.wordcloud, item.target.wordcloud)
+            //   item.weight
+            // );
+            return calcWeight(item.source.TfIdf, item.target.TfIdf);
           })
       )
-      .force("charge", d3.forceManyBody().strength(-100))
+
+      .force("charge", d3.forceManyBody().strength(-50))
       .force("center", d3.forceCenter(width / 3, height / 2));
 
     simulation.on("tick", () => {
