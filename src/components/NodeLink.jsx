@@ -20,6 +20,7 @@ const NodeLink = (props) => {
     wordcloud: node.wordcloud,
     setSelectGameIdx: node.setSelectGameIdx,
     TfIdf: node.TfIdf,
+    genres: node.genres,
   }));
   const calcWeight = (arr1, arr2) => {
     const map1 = new Map();
@@ -47,43 +48,23 @@ const NodeLink = (props) => {
 
     return sum;
   };
+  // console.log(props);
+  console.log(nodes);
 
-  useEffect(() => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+  const calcCommonGenres = (game1, game2) => {
+    var count = 0;
 
-    const links = [];
-
-    for (let i = 0; i < nodes.length; i++) {
-      const c =
-        k -
-        links.filter((item) => item.source === i || item.target === i).length;
-      const ngIndex = links
-        .filter((item) => item.target === i)
-        .map((item) => item.source);
-
-    const array = nodes
-      .map((node, index) => {
-        return {
-          index,
-          weight: i !== index ? calcWeight(nodes[i].TfIdf, node.TfIdf) : 0,
-        };
+    game1.forEach((item) =>
+      game2.forEach((i) => {
+        if (i.id === item.id) {
+          count++;
+        }
       })
-      .filter((e) => e);
-    array.sort((a, b) => b.weight - a.weight);
-    console.log(array);
-    const newArray = array.slice(0, c).map((item) => item.index);
-    //console.log(newArray);
-    newArray.forEach((index) => {
-      const count = links.filter(
-        (item) => item.source === index || item.target === index
-      ).length;
-      if (count < k) {
-        links.push({ source: i, target: index });
-      }
-    });
-  }
-  console.log(links);
+    );
+    return count;
+  };
+
+  // console.log(links);
   // const threshold = 5;
   // const res = {};
   // nodes.forEach((from, i) => {
@@ -127,6 +108,41 @@ const NodeLink = (props) => {
   useEffect(() => {
     const width = window.innerWidth;
     const height = window.innerHeight;
+    const links = [];
+
+    for (let i = 0; i < nodes.length; i++) {
+      const c =
+        k -
+        links.filter((item) => item.source === i || item.target === i).length;
+      const ngIndex = links
+        .filter((item) => item.target === i)
+        .map((item) => item.source);
+
+      const array = nodes
+        .map((node, index) => {
+          return {
+            index,
+            weight:
+              i !== index
+                ? (calcCommonGenres(nodes[i].genres, node.genres) + 1) *
+                  calcWeight(nodes[i].TfIdf, node.TfIdf)
+                : 0,
+          };
+        })
+        .filter((e) => e);
+      array.sort((a, b) => b.weight - a.weight);
+      const newArray = array
+        .slice(0, c)
+        .map((item) => item.index)
+        .filter((index) => !ngIndex.find((i) => i === index));
+
+      newArray.forEach((index) => {
+        const count = links.filter((item) => item.target === index).length;
+        if (count < 5) {
+          links.push({ source: i, target: index });
+        }
+      });
+    }
 
     const svg = d3.select(chartRef.current);
 
@@ -136,8 +152,8 @@ const NodeLink = (props) => {
       .enter()
       .append("line")
       .attr("class", "link")
-      .style("stroke", "gray")
-      .style("stroke-width", 0.5);
+      .style("stroke", "gray");
+    // .style("stroke-width", {stroke});
 
     const nodeElements = svg
       .selectAll(".node")
@@ -171,20 +187,32 @@ const NodeLink = (props) => {
           .forceLink(links)
           .id((d) => d.id)
           .distance((item) => {
-            return 0.3 * calcWeight(item.source.TfIdf, item.target.TfIdf);
+            return (
+              0.1 *
+              (calcCommonGenres(item.source.genres, item.target.genres) + 1) *
+              calcWeight(item.source.TfIdf, item.target.TfIdf)
+            );
           })
       )
 
-      .force("charge", d3.forceManyBody().strength(-50))
+      .force("charge", d3.forceManyBody().strength(-1000))
       .force("center", d3.forceCenter(width / 3, height / 2));
 
     simulation.on("tick", () => {
+      // console.log(links);
       svg
         .selectAll(".link")
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
-        .attr("y2", (d) => d.target.y);
+        .attr("y2", (d) => d.target.y)
+        .style(
+          "stroke-width",
+          (d) =>
+            0.008 *
+            (calcCommonGenres(d.source.genres, d.target.genres) + 1) *
+            calcWeight(d.source.TfIdf, d.target.TfIdf)
+        );
 
       nodeElements.attr("transform", (d) => `translate(${d.x},${d.y})`);
     });

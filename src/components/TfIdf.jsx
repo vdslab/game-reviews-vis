@@ -742,6 +742,7 @@ export const TfIdf = (props) => {
     "Over",
     "how",
     "there",
+    "fun",
   ];
 
   // 各ゲームごとに reviews の中の要素を単語ごとに分割して配列にする
