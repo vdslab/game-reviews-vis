@@ -49,7 +49,7 @@ const App = () => {
     if (data.length !== 0) {
       setTFIDF(TfIdf(data));
     }
-  }, [TFIDF]);
+  }, [data,TFIDF]);
 
   useEffect(() => {
     data.forEach((item, index) => {
