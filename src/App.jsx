@@ -15,6 +15,7 @@ import { TfIdf } from "./components/TfIdf";
 const App = () => {
   const [data, setData] = useState([]);
   const [addData, setAddData] = useState([]);
+  const [selectWord, setSelectWord] = useState("");
   const [selectGameIdx, setSelectGameIdx] = useState(0);
   const [TFIDF, setTFIDF] = useState([]);
 
@@ -50,15 +51,20 @@ const App = () => {
     }
   }, [data]);
 
-  data.map((item, index) => {
-    item.TFIDF = TFIDF[index];
-  });
+  useEffect(() => {
+    data.forEach((item, index) => {
+      item.TFIDF = TFIDF[index];
 
-  // console.log(data.length);
-
-  // if (data.length !== 0) {
-  //   console.log(data[selectGameIdx].wordcloud);
-  // }
+      item.TFIDF.forEach((tfidfword) => {
+        const findWord = item.wordcloud.find(
+          (word) => word.text === tfidfword.text
+        );
+        if (findWord) {
+          tfidfword.rating = findWord.rating;
+        }
+      });
+    });
+  }, [TFIDF]);
 
   return (
     <div>
@@ -109,7 +115,7 @@ const App = () => {
                       高評価
                     </Grid>
                   </Grid>
-                  {TFIDF.length !== 0 ? (
+                  {data[0].TFIDF ? (
                     <div>
                       <WordCloud
                         data={data[selectGameIdx].TFIDF}
@@ -118,8 +124,8 @@ const App = () => {
                         height={100}
                         rotate={0}
                         padding={0}
-                        onWordClick={(event, d) => console.log(d.text)}
-                        //fill={(word) => getColor(word.rating)}
+                        onWordClick={(_, d) => setSelectWord(d.text)}
+                        fill={(word) => getColor(word.rating)}
                       ></WordCloud>
                     </div>
                   ) : (
