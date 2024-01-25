@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import Icon from "./Icon";
 
 const NodeLink = (props) => {
-  const { data, setSelectGameIdx } = props;
+  const { data, selectGameIdx, setSelectGameIdx } = props;
   const svgRef = useRef();
   const chartRef = useRef();
   const k = 5;
@@ -99,23 +99,60 @@ const NodeLink = (props) => {
       .append("g")
       .attr("class", "node");
 
-    nodeElements
-      .append("defs")
-      .append("clipPath")
-      .attr("id", (d, i) => `clip-${i}`)
-      .append("circle")
-      .attr("r", 17);
+    nodeElements.each((node, index, nodes) => {
+      // ここで条件をチェックして、表示方法を決定
+      const displayCondition = index === selectGameIdx;
+      const useImage = displayCondition ? true : false;
 
-    nodeElements
-      .append("image")
-      .attr("href", (d) => d.header_image)
-      .attr("width", 75)
-      .attr("height", 60)
-      .attr("x", -37.5)
-      .attr("y", -30)
-      .attr("clip-path", (d, i) => `url(#clip-${i})`)
-      .on("click", (event, d) => handleIconClick(d));
+      // ノードに基づいて表示する要素を追加
+      const nodeElement = d3.select(nodes[index]);
 
+      if (useImage) {
+        // 条件が満たされた場合は画像を表示
+        nodeElement
+          .append("defs")
+          .append("clipPath")
+          .attr("id", `clip-${index}`)
+          .append("circle")
+          .attr("r", 17);
+
+        nodeElement
+          .append("circle")
+          .attr("r", 21)
+          .style("stroke", "skyblue") // 枠線の色
+          .style("stroke-width", 4);
+
+        nodeElement
+          .append("image")
+          .attr("href", node.header_image)
+          .attr("width", 75)
+          .attr("height", 60)
+          .attr("x", -37.5)
+          .attr("y", -30)
+          .attr("clip-path", `url(#clip-${index})`)
+          .on("click", (event, d) => handleIconClick(d));
+
+        // 枠線の太さ
+      } else {
+        // 条件が満たされない場合は代替の要素を表示
+        nodeElement
+          .append("defs")
+          .append("clipPath")
+          .attr("id", `clip-${index}`)
+          .append("circle")
+          .attr("r", 17);
+
+        nodeElement
+          .append("image")
+          .attr("href", node.header_image)
+          .attr("width", 75)
+          .attr("height", 60)
+          .attr("x", -37.5)
+          .attr("y", -30)
+          .attr("clip-path", `url(#clip-${index})`)
+          .on("click", (event, d) => handleIconClick(d));
+      }
+    });
     const simulation = d3
       .forceSimulation(nodes)
       .force(
@@ -136,8 +173,17 @@ const NodeLink = (props) => {
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
-        .attr("y2", (d) => d.target.y);
-
+        .attr("y2", (d) => d.target.y)
+        .style("stroke", (d) => {
+          const selectFlag =
+            d.source.id === selectGameIdx || d.target.id === selectGameIdx;
+          return selectFlag ? "skyblue" : "gray";
+        })
+        .style("stroke-width", (d) => {
+          const selectFlag =
+            d.source.id === selectGameIdx || d.target.id === selectGameIdx;
+          return selectFlag ? "3" : "0.5";
+        });
       nodeElements.attr("transform", (d) => `translate(${d.x},${d.y})`);
     });
 
