@@ -64,7 +64,7 @@ export default function SearchAppBar(props) {
   
 
   const setSearchTermTGameId = (tar) => {
-    if(tar.length > 10)
+    if(tar.length > 5)
       FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions  });
     //    setAddData(tar);
   };
