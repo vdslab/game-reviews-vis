@@ -3,15 +3,13 @@ import Wordcloud from "./Wordcloud";
 
 const FetchData = (props) => {
   const { setData, addData, setSelectGameIdx } = props;
-  
+
   let gameIds;
   if (addData == 0) {
     gameIds = jsonData.appid;
   } else {
     gameIds = [...jsonData.appid, parseInt(addData, 10)];
   }
-
-  console.log(gameIds);
   // const gameIds = jsonData.appid;
 
   const fetchData = async () => {

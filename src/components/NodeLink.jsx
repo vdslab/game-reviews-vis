@@ -1,14 +1,18 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as d3 from "d3";
 
 import Icon from "./Icon";
 
 const NodeLink = (props) => {
   const { data, setSelectGameIdx } = props;
+  const svgRef = useRef();
   const chartRef = useRef();
   const k = 5;
 
-  console.log(data);
+  const [z, setZ] = useState(1);
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+
   const nodes = Object.values(data).map((node, index) => ({
     id: index,
     name: node.name,
@@ -17,18 +21,9 @@ const NodeLink = (props) => {
     setSelectGameIdx: node.setSelectGameIdx,
     TfIdf: node.TfIdf,
   }));
-
-  console.log(nodes);
-
-  /* const links = nodes.map((_, i) => {
-    return { source: selectGameIdx, target: i };
-  }); */
-
   const calcWeight = (arr1, arr2) => {
     const map1 = new Map();
     const map2 = new Map();
-
-    // console.log(arr1, arr2);
 
     arr1.forEach((item) => {
       if (!map1.has(item.text) || map1.get(item.text) > item.value) {
@@ -53,15 +48,19 @@ const NodeLink = (props) => {
     return sum;
   };
 
-  const links = [];
+  useEffect(() => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-  for (let i = 0; i < nodes.length; i++) {
-    const c =
-      k - links.filter((item) => item.source === i || item.target === i).length;
-    const ngIndex = links
-      .filter((item) => item.target === i)
-      .map((item) => item.source);
-    //console.log(ngIndex.length);
+    const links = [];
+
+    for (let i = 0; i < nodes.length; i++) {
+      const c =
+        k -
+        links.filter((item) => item.source === i || item.target === i).length;
+      const ngIndex = links
+        .filter((item) => item.target === i)
+        .map((item) => item.source);
 
     const array = nodes
       .map((node, index) => {
@@ -164,12 +163,6 @@ const NodeLink = (props) => {
       .attr("clip-path", (d, i) => `url(#clip-${i})`)
       .on("click", (event, d) => handleIconClick(d));
 
-    /* nodeElements
-      .append("text")
-      .attr("text-anchor", "middle")
-      .attr("dy", 40)
-      .text((d) => d.name); */
-
     const simulation = d3
       .forceSimulation(nodes)
       .force(
@@ -178,11 +171,7 @@ const NodeLink = (props) => {
           .forceLink(links)
           .id((d) => d.id)
           .distance((item) => {
-            // console.log(
-            //   // calcWeight(item.source.wordcloud, item.target.wordcloud)
-            //   item.weight
-            // );
-            return calcWeight(item.source.TfIdf, item.target.TfIdf);
+            return 0.3 * calcWeight(item.source.TfIdf, item.target.TfIdf);
           })
       )
 
@@ -201,28 +190,40 @@ const NodeLink = (props) => {
     });
 
     simulation.restart();
-  }, [nodes]);
+  }, []);
+
+  useEffect(() => {
+    const zoom = d3.zoom().on("zoom", (event) => {
+      const { x, y, k } = event.transform;
+      setX(x);
+      setY(y);
+      setZ(k);
+    });
+    d3.select(svgRef.current).call(zoom);
+  }, []);
 
   const handleIconClick = (node) => {
     setSelectGameIdx(node.id);
   };
 
   return (
-    <svg ref={chartRef} width={window.innerWidth} height={window.innerHeight}>
-      <g className="links">
-        {/* {links.map((link, i) => (
-          <line
-            key={i}
-            className="link"
-            x1={link.source.x}
-            y1={link.source.y}
-            x2={link.target.x}
-            y2={link.target.y}
-            style={{ stroke: "#999", strokeWidth: 0.5 }}
-          />
-        ))} */}
+    <svg ref={svgRef} width={window.innerWidth} height={window.innerHeight}>
+      <g ref={chartRef} transform={`translate(${x},${y})scale(${z})`}>
+        <g className="link">
+          {/* {links.length !== 0 &&
+            links.map((link, i) => (
+              <line
+                key={i}
+                className="link"
+                x1={link.source.x}
+                y1={link.source.y}
+                x2={link.target.x}
+                y2={link.target.y}
+                style={{ stroke: "gray", strokeWidth: 0.5 }}
+              />
+            ))} */}
+        </g>
       </g>
-      <g className="nodes"></g>
     </svg>
   );
 };
