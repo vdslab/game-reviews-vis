@@ -138,6 +138,7 @@ export default function SearchAppBar(props) {
               >
                 <ul>
                   {data.map((game, index) => (
+
                     <li
                       style={{ padding: "10px" }}
                       key={index}
@@ -146,6 +147,14 @@ export default function SearchAppBar(props) {
                         setMenuOpen(false);
                       }}
                     >
+                      <span
+                        style={{
+                          color: `rgba(255, 150, ${
+                            255 / data.length + index * (255 / data.length)
+                          })`,
+                        }}
+                      >
+                        {index + 1}. &nbsp;
                       <span
                         style={{
                           color: `rgba(255, 150, ${

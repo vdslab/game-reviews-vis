@@ -43,10 +43,12 @@ const App = () => {
     FetchData({ setData, addData, setSelectGameIdx });
   }, [, addData]);
 
+  /*
   useEffect(() => {
     if (data.length !== 0) {
       setTFIDF(TfIdf(data));
     }
+    console.log("sdfafasf");
   }, [data]);
 
   useEffect(() => {
@@ -63,6 +65,9 @@ const App = () => {
       });
     });
   }, [TFIDF]);
+  */
+
+  console.log(data);
 
   useEffect(() => {
     if(data.length !== 0 && data[0].TFIDF){

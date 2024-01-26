@@ -30,6 +30,8 @@ const NodeLink = (props) => {
   const { data, selectGameIdx, setSelectGameIdx } = props;
   const k = 5;
 
+  console.log(props);
+
   const [newLinks, setNewLinks] = useState([]);
   const [newNode, setNewNode] = useState([]);
 
