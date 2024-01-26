@@ -18,7 +18,7 @@ const FetchSearchTermTGameId = ({
 
     if (matchingApps.length > 0) {
       if(allMatchingApps){
-        setAddGameId(allMatchingApps.appid);
+        // setAddGameId(allMatchingApps.appid);
         // setSearchSuggestions(matchingApps.map((app) => app.name));
         setSearchSuggestions([allMatchingApps.name, ...matchingApps.map((app) => app.name)]);
       }else{
