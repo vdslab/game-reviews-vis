@@ -68,7 +68,8 @@ export default function SearchAppBar(props) {
   const [searchTermBool, setSearchTermBool] = useState();
 
   const setSearchTermTGameId = (tar) => {
-    setSearchTermBool("");
+    if(searchTermBool !=="")
+      setSearchTermBool("");
     setSearchTerm(tar);
     if (tar.length > 3)
       FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions });
@@ -102,7 +103,6 @@ export default function SearchAppBar(props) {
     if (data && data.length > 0) {
       setAddDataNum(data.length - 47);
     }
-    console.log(addDataNum)
   }, [data, jsonData]);
   
 
