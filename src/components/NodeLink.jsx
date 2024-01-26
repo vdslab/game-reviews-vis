@@ -86,15 +86,9 @@ const NodeLink = (props) => {
     const width = window.innerWidth;
     const height = window.innerHeight;
     const links = [];
+    const ngIndex = [];
 
     for (let i = 0; i < nodes.length; i++) {
-      const c =
-        k -
-        links.filter((item) => item.source === i || item.target === i).length;
-      const ngIndex = links
-        .filter((item) => item.target === i)
-        .map((item) => item.source);
-
       const array = nodes
         .map((node, index) => {
           return {
@@ -108,15 +102,33 @@ const NodeLink = (props) => {
         })
         .filter((e) => e);
       array.sort((a, b) => b.weight - a.weight);
-      const newArray = array
-        .slice(0, c)
-        .map((item) => item.index)
-        .filter((index) => !ngIndex.find((i) => i === index));
 
+      const newArray = array.map((item) => item.index);
+
+      let count = 0;
       newArray.forEach((index) => {
-        const count = links.filter((item) => item.target === index).length;
-        if (count < 5) {
+        const isSourceOk =
+          links.filter((item) => item.target === i || item.source === i)
+            .length < k;
+        const isTargetOk =
+          links.filter((item) => item.target === index || item.source === index)
+            .length < k;
+        if (count < k && isSourceOk && isTargetOk) {
           links.push({ source: i, target: index });
+          count++;
+          if (
+            links.filter((item) => item.target === i || item.source === i)
+              .length >= k
+          ) {
+            ngIndex.push(i);
+          } else if (
+            links.filter(
+              (item) => item.target === index || item.source === index
+            ).length >= k
+          ) {
+            ngIndex.push(index);
+            count++;
+          }
         }
       });
     }
