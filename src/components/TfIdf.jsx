@@ -3,17 +3,14 @@ import React, { useEffect, useRef } from "react";
 export const TfIdf = (props) => {
   const { data, setData } = props;
 
-  //console.log(data);
   //レビューだけを抽出
 
   const documents = data.map((data) =>
     data.reviews.map((reviews) => reviews.review)
   );
-  //console.log(documents);
 
   // 各ゲームごとにレビューをまとめる
   const combinedReviews = documents.map((gameReviews) => gameReviews.join(" "));
-  //console.log(combinedReviews);
 
   const stopWords = [
     "i",
@@ -777,8 +774,6 @@ export const TfIdf = (props) => {
     return allWords;
   });
 
-  //console.log(wordsArray);
-
   ///////////////////////////////////////////////
   const TFIDFofGame = [];
 
@@ -801,7 +796,6 @@ export const TfIdf = (props) => {
     const terms = unique[i]; // 例としてuniqueWordsArrayの最初の文書の単語を使用
 
     const idfResults = calculateIDF(documents[i], terms);
-    //console.log("IDF Results:", idfResults);
 
     // TFを計算する関数
     function calculateTF(document) {
@@ -824,16 +818,12 @@ export const TfIdf = (props) => {
 
     // TFを計算
     const tfResult = calculateTF(wordsArray[i]);
-    //console.log(tfResult);
 
     // オブジェクト同士のプロパティの値を掛け算
     const resultObject = multiplyObjects(tfResult, idfResults);
-    //console.log(tfResult.The * idfResults.The);
 
     //////////////////////////////////////
 
-    //console.log(resultObject);
-    console.log();
     const TFIDF = [];
     for (const key in resultObject) {
       const findWord = data[i].wordcloud.find((word) => word.text === key);
@@ -844,7 +834,6 @@ export const TfIdf = (props) => {
         rating: findWord ? findWord.rating : 0.5,
       });
     }
-    //console.log(TFIDF);
 
     TFIDFofGame.push(TFIDF);
   }
@@ -865,12 +854,6 @@ export const TfIdf = (props) => {
 
     return result;
   }
-
-  console.log(
-    data.map((item, i) => {
-      return { ...item, TFIDF: TFIDFofGame[i] };
-    })
-  );
 
   setData(
     data.map((item, i) => {
