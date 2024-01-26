@@ -64,9 +64,11 @@ export default function SearchAppBar(props) {
   const [addGameId, setAddGameId] = useState(0);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [menuOpen, setMenuOpen] = useState();
-  const [searchTerm, setSearchTerm] = useState(false);
+  const [searchTerm, setSearchTerm] = useState();
+  const [searchTermBool, setSearchTermBool] = useState();
 
   const setSearchTermTGameId = (tar) => {
+    setSearchTermBool("");
     setSearchTerm(tar);
     if (tar.length > 2)
       FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions });
@@ -87,6 +89,7 @@ export default function SearchAppBar(props) {
   const handleSuggestionClick = (suggestion) => {
     setSearchTermTGameId(suggestion);
     setSearchTerm("");
+    setSearchTermBool(suggestion);
 
     /* 完全一致自動検索 */
     // const selectedApp = jsonData.applist.apps.find((app) => app.name === suggestion);
@@ -132,7 +135,7 @@ export default function SearchAppBar(props) {
                 }}
               >
                 <ul>
-                  {addData &&
+                  {addData !== 0 &&
                     data.slice(-1).map((game, index) => (
                       <li
                         style={{ padding: "10px" }}
@@ -191,12 +194,22 @@ export default function SearchAppBar(props) {
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              // onChange={(e) => setSearchTermFunc(e.target.value)}
-              onChange={(e) => setSearchTermTGameId(e.target.value)}
-            />
+            {searchTerm !== '' &&
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+                onChange={(e) => setSearchTermTGameId(e.target.value)}
+              />
+            }
+            {searchTerm === '' &&
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ "aria-label": "search" }}
+                value={searchTermBool}
+                // onChange={(e) => setSearchTermFunc(e.target.value)}
+                onChange={(e) => setSearchTermTGameId(e.target.value)}
+              />
+            }
             {searchSuggestions.length > 1 &&
               searchTerm &&
               searchTerm !== "" && (
