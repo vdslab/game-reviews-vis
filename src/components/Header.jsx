@@ -125,6 +125,10 @@ export default function SearchAppBar(props) {
                         setMenuOpen(false);
                       }}
                     >
+                      <span 
+                        style={{color: `rgba(255, 150, ${255 / data.length + index *(255 / data.length)})`}}>
+                          {index+1}. &nbsp;
+                      </span>
                       {game.name}
                     </li>
                   ))}
