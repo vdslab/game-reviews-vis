@@ -67,6 +67,7 @@ export default function SearchAppBar(props) {
   const [searchTerm, setSearchTerm] = useState(false);
 
   const setSearchTermTGameId = (tar) => {
+    setSearchTerm(tar);
     if(tar.length > 2)
       FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions  });
     //    setAddData(tar);
@@ -84,9 +85,8 @@ export default function SearchAppBar(props) {
   // };
 
   const handleSuggestionClick = (suggestion) => {
-    setSearchSuggestions([]); // カーソルを外す
-
     setSearchTermTGameId(suggestion);
+    setSearchTerm('');
 
     /* 完全一致自動検索 */
     // const selectedApp = jsonData.applist.apps.find((app) => app.name === suggestion);
@@ -95,9 +95,8 @@ export default function SearchAppBar(props) {
     // }
   };
 
-  useEffect(() => {
+  useEffect(() => {//確認用
     console.log(data);
-
   }, [data]);
 
   useEffect(() => {
@@ -176,7 +175,7 @@ export default function SearchAppBar(props) {
               // onChange={(e) => setSearchTermFunc(e.target.value)}
               onChange={(e) => setSearchTermTGameId(e.target.value)}    
             />
-              {searchSuggestions.length > 1 && (
+              {searchSuggestions.length > 1 && searchTerm && searchTerm!== '' && (
                 <Paper sx={{ position: 'absolute', zIndex: 1, left: 0, right: 0, mt: 1 }}>
                   <List>
                     {searchSuggestions.slice(0, 5).map((suggestion) => (
