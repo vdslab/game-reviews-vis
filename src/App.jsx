@@ -18,35 +18,35 @@ const App = () => {
   const [loading, setLoading] = useState(false);
 
   const genreMapping = {
-    "1": "Action",
-    "37": "Free to Play",
-    "2": "Strategy",
-    "25": "Adventure",
-    "23": "Indie",
-    "3": "RPG",
-    "51": "Animation & Modeling",
-    "58": "Video Production",
-    "4": "Casual",
-    "28": "Simulation",
-    "9": "Racing",
-    "73": "Violent",
-    "29": "Massively Multiplayer",
-    "72": "Nudity",
-    "18": "Sports",
-    "70": "Early Access",
-    "74": "Gore",
-    "57": "Utilities",
-    "52": "Audio Production",
-    "53": "Design & Illustration",
-    "59": "Web Publishing",
-    "55": "Photo Editing",
-    "54": "Education",
-    "56": "Software Training",
-    "71": "Sexual Content",
-    "60": "Game Development",
-    "50": "Accounting",
-    "81": "Documentary",
-    "84": "Tutorial"
+    1: "Action",
+    37: "Free to Play",
+    2: "Strategy",
+    25: "Adventure",
+    23: "Indie",
+    3: "RPG",
+    51: "Animation & Modeling",
+    58: "Video Production",
+    4: "Casual",
+    28: "Simulation",
+    9: "Racing",
+    73: "Violent",
+    29: "Massively Multiplayer",
+    72: "Nudity",
+    18: "Sports",
+    70: "Early Access",
+    74: "Gore",
+    57: "Utilities",
+    52: "Audio Production",
+    53: "Design & Illustration",
+    59: "Web Publishing",
+    55: "Photo Editing",
+    54: "Education",
+    56: "Software Training",
+    71: "Sexual Content",
+    60: "Game Development",
+    50: "Accounting",
+    81: "Documentary",
+    84: "Tutorial",
   };
 
   const Item = styled(Paper)(({ theme }) => ({
@@ -73,40 +73,6 @@ const App = () => {
     FetchData({ data, setData, addData, setSelectGameIdx });
   }, [, addData]);
 
-  /*
-  useEffect(() => {
-    if (data.length !== 0) {
-      setTFIDF(TfIdf(data));
-    }
-    console.log("sdfafasf");
-  }, [data]);
-
-  useEffect(() => {
-    data.forEach((item, index) => {
-      item.TFIDF = TFIDF[index];
-  
-      item.TFIDF.forEach((tfidfword) => {
-        const findWord = item.wordcloud.find(
-          (word) => word.text === tfidfword.text
-        );
-        if (findWord) {
-          tfidfword.rating = findWord.rating;
-        }
-      });
-    });
-  }, [TFIDF]);
-  */
-
-  // useEffect(() => {
-  //   if (data.length !== 0 && data[0].TFIDF) {
-  //     const timer = setTimeout(() => {
-  //       setLoading(true);
-  //       setSelectGameIdx(data.length - 1);
-  //     }, 2000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [addData]);
-
   return (
     <div>
       <Header
@@ -115,7 +81,7 @@ const App = () => {
         data={data}
         setSelectGameIdx={setSelectGameIdx}
       ></Header>
-      <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
+      <Grid container style={{ height: "calc(100vh - 60px)" }} spacing={0}>
         <Grid item xs={8}>
           <Item square>
             {(data.length !== 0 && data[0].TFIDF) || loading ? (
@@ -138,9 +104,15 @@ const App = () => {
             )}
           </Item>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={4} style={{ height: "100%" }}>
           <Item square>
-            <div style={{ backgroundColor: "lightgray", padding: "10px" }}>
+            <div
+              style={{
+                height: "100%",
+                backgroundColor: "lightgray",
+                padding: "20px",
+              }}
+            >
               {data.length !== 0 ? (
                 <div>
                   <Grid container spacing={0} justifyContent="flex-end">
@@ -162,7 +134,7 @@ const App = () => {
                     </Grid>
                   </Grid>
                   {data[0].TFIDF ? (
-                    <div>
+                    <div style={{ marginTop: "50px" }}>
                       <WordCloud
                         data={data[selectGameIdx].TFIDF}
                         fontSize={fontSizeMapper}
@@ -178,7 +150,11 @@ const App = () => {
                     <h2>Loading...</h2>
                   )}
 
-                  <div style={{ fontSize: "30px" }}>
+                  <div
+                    style={{
+                      fontSize: "30px",
+                    }}
+                  >
                     {data[selectGameIdx].name}
                   </div>
                   <div

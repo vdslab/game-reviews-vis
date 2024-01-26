@@ -16,7 +16,7 @@ const Icon = (props) => {
     >
       <defs>
         <clipPath id={`clip-${index}`}>
-          <circle r={17} />
+          <circle r={30} />
         </clipPath>
       </defs>
       <image
@@ -27,20 +27,20 @@ const Icon = (props) => {
         y={-30}
         clipPath={`url(#clip-${index})`}
       />
-      {/* {isHovered && (
-        <rect x={-37.5} y={-30} width={75} height={60} fill="lightgray">
+      {isHovered && (
+        <rect x={-37.5} y={30} width={75} height={60} fill="lightgray">
           <text
             x={0}
-            y={60}
+            y={0}
             textAnchor="middle"
-            fill="#fff"
+            fill="white"
             fontSize="14px"
             pointerEvents="none"
           >
             {name}
           </text>
         </rect>
-      )} */}
+      )}
     </g>
   );
 };
