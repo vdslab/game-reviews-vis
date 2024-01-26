@@ -36,11 +36,10 @@ const App = () => {
     const lightness = 50 + (blueflag ? Math.abs(value - 1) : value) * 100;
     return `hsl(${color}, 100%, ${lightness}%)`;
   };
- 
+
   useEffect(() => {
     FetchData({ setData, addData, setSelectGameIdx });
-  }, [,addData]);
-  
+  }, [, addData]);
 
   useEffect(() => {
     if (data.length !== 0) {
@@ -75,7 +74,6 @@ const App = () => {
                   name: item.name,
                   header_image: item.header_image,
                   index: i + 1,
-                  setSelectGameIdx: setSelectGameIdx,
                   wordcloud: item.wordcloud,
                   key: i,
                   reviews: item.reviews,
@@ -97,7 +95,7 @@ const App = () => {
                 <div>
                   <Grid container spacing={0} justifyContent="flex-end">
                     <Grid item alignItems="center">
-                      低評価
+                      negative
                     </Grid>
                     <Grid item>
                       <Box
@@ -110,7 +108,7 @@ const App = () => {
                       />
                     </Grid>
                     <Grid item alignItems="stretch">
-                      高評価
+                      positive
                     </Grid>
                   </Grid>
                   {data[0].TFIDF ? (

@@ -5,27 +5,43 @@ const Icon = (props) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleIconClick = () => {
-    setSelectGameIdx(index - 1);
+    setSelectGameIdx(index);
   };
 
-  //console.log(props);
-
   return (
-    <image
-      href={header_image}
-      alt="my image"
-      style={{
-        width: "50px",
-        height: "50px",
-        /* objectFit: "cover", */
-        borderRadius: "80%",
-        overflow: "hidden",
-        filter: isHovered ? "brightness(110%)" : "brightness(100%)",
-      }}
-      onClick={handleIconClick}
+    <g
+      onClick={() => handleIconClick()}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-    />
+    >
+      <defs>
+        <clipPath id={`clip-${index}`}>
+          <circle r={17} />
+        </clipPath>
+      </defs>
+      <image
+        href={header_image}
+        width={75}
+        height={60}
+        x={-37.5}
+        y={-30}
+        clipPath={`url(#clip-${index})`}
+      />
+      {/* {isHovered && (
+        <rect x={-37.5} y={-30} width={75} height={60} fill="lightgray">
+          <text
+            x={0}
+            y={60}
+            textAnchor="middle"
+            fill="#fff"
+            fontSize="14px"
+            pointerEvents="none"
+          >
+            {name}
+          </text>
+        </rect>
+      )} */}
+    </g>
   );
 };
 
