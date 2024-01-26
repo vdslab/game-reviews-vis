@@ -239,17 +239,9 @@ export default function SearchAppBar(props) {
             {searchSuggestions.length > 1 &&
               searchTerm &&
               searchTerm !== "" && (
-                <Paper
-                  sx={{
-                    position: "absolute",
-                    zIndex: 1,
-                    left: 0,
-                    right: 0,
-                    mt: 1,
-                  }}
-                >
+                <Paper sx={{ position: 'absolute', zIndex: 1, left: 0, right: 0, mt: 1, maxHeight: '80vh', overflowY: 'auto' }}>
                   <List>
-                    {searchSuggestions.slice(0, 5).map((suggestion) => (
+                    {searchSuggestions.map((suggestion) => (
                       <ListItem
                         button
                         key={suggestion}
