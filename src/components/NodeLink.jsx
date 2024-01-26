@@ -113,7 +113,7 @@ const NodeLink = (props) => {
           .id((d) => d.id)
           .distance((item) => {
             return (
-              0.1 *
+              0.08 *
               (calcCommonGenres(item.source.genres, item.target.genres) + 1) *
               calcWeight(item.source.TfIdf, item.target.TfIdf)
             );

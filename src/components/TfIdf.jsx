@@ -1,20 +1,47 @@
 import React, { useEffect, useRef } from "react";
 
 export const TfIdf = (props) => {
-  const { data, setData } = props;
+  const data = props;
 
-  //console.log(data);
-  //レビューだけを抽出
+  const wordcloud = data.reviews
+    .map((item) => {
+      const words = item.review.split(/\s+/);
+      return words.map((word) => {
+        return { text: word, voted_up: item.voted_up };
+      });
+    })
+    .flat()
+    .reduce((newdata, review) => {
+      const target = newdata.find((item) => item.text === review.text);
+      if (target) {
+        target.value = target.value + 1;
+        if (review.voted_up) {
+          target.positive = target.positive + 1;
+        } else {
+          target.negative = target.negative + 1;
+        }
+      } else {
+        newdata.push({
+          text: review.text,
+          value: 1,
+          positive: review.voted_up ? 1 : 0,
+          negative: review.voted_up ? 0 : 1,
+        });
+      }
+      return newdata;
+    }, [])
+    .filter((word) => word.text.length > 1 && /^[a-zA-Z]+$/.test(word.text))
+    .map((word) => {
+      return {
+        text: word.text,
+        value: word.value,
+        rating: word.positive / (word.positive + word.negative),
+      };
+    });
 
-  const documents = data.map((data) =>
-    data.reviews.map((reviews) => reviews.review)
-  );
-  //console.log(documents);
+  const newData = { ...data, wordcloud: wordcloud };
 
-  // 各ゲームごとにレビューをまとめる
-  const combinedReviews = documents.map((gameReviews) => gameReviews.join(" "));
-  //console.log(combinedReviews);
-
+  const document = newData.reviews.map((reviews) => reviews.review);
   const stopWords = [
     "i",
     "me",
@@ -745,115 +772,61 @@ export const TfIdf = (props) => {
     "fun",
   ];
 
-  // 各ゲームごとに reviews の中の要素を単語ごとに分割して配列にする
-  // 被っているやつを除く
-  const uniqueWordsArray = documents.map((item) => {
-    const uniqueWords = new Set();
-    item.forEach((review) => {
-      review.split(/\s+/).forEach((word) => {
-        if (word.length > 1 && /^[a-zA-Z]+$/.test(word)) {
-          uniqueWords.add(word);
-        }
-      });
-    });
-
-    return Array.from(uniqueWords);
+  const uniqueWordsArray = newData.wordcloud.map((item) => {
+    return item.text;
   });
 
-  const unique = uniqueWordsArray.map((array) =>
-    array.filter((i) => {
-      return !stopWords.find((item) => i === item);
-    })
-  );
+  const unique = uniqueWordsArray.filter((i) => {
+    return !stopWords.find((item) => i === item);
+  });
 
-  //除かない
-  const wordsArray = documents.map((item) => {
-    const allWords = [];
-    item.forEach((review) => {
-      review.split(/\s+/).forEach((word) => {
+  const wordsArray = data.reviews
+    .map((item) => {
+      const allWords = [];
+      item.review.split(/\s+/).forEach((word) => {
         allWords.push(word);
       });
+      return allWords;
+    })
+    .flat();
+
+  function calculateTF(document) {
+    const wordCount = {}; // 単語の出現回数を保持するオブジェクト
+
+    // 文書内の各単語の出現回数を数える
+    document.forEach((word) => {
+      wordCount[word] = (wordCount[word] || 0) + 1;
     });
-    return allWords;
-  });
 
-  //console.log(wordsArray);
+    // 各単語の出現回数を文書内の単語数で割ってTFを計算
+    const tf = {};
+    const totalWords = document.length;
+    Object.keys(wordCount).forEach((word) => {
+      tf[word] = wordCount[word] / totalWords;
+    });
 
-  ///////////////////////////////////////////////
-  const TFIDFofGame = [];
+    return tf;
+  }
 
-  for (let i = 0; i < data.length; i++) {
-    function calculateIDF(documents, terms) {
-      const idfResults = {};
+  function calculateIDF(documents, terms) {
+    const idfResults = {};
 
-      terms.forEach((term) => {
-        const documentCountWithTerm = documents.reduce(
-          (count, document) => (document.includes(term) ? count + 1 : count),
-          0
-        );
-        const idf = Math.log(documents.length / documentCountWithTerm);
-        idfResults[term] = idf + 1;
-      });
+    terms.forEach((term) => {
+      const documentCountWithTerm = documents.reduce(
+        (count, document) => (document.includes(term) ? count + 1 : count),
+        0
+      );
+      const idf = Math.log(documents.length / documentCountWithTerm);
+      idfResults[term] = idf + 1;
+    });
 
-      return idfResults;
-    }
-
-    const terms = unique[i]; // 例としてuniqueWordsArrayの最初の文書の単語を使用
-
-    const idfResults = calculateIDF(documents[i], terms);
-    //console.log("IDF Results:", idfResults);
-
-    // TFを計算する関数
-    function calculateTF(document) {
-      const wordCount = {}; // 単語の出現回数を保持するオブジェクト
-
-      // 文書内の各単語の出現回数を数える
-      document.forEach((word) => {
-        wordCount[word] = (wordCount[word] || 0) + 1;
-      });
-
-      // 各単語の出現回数を文書内の単語数で割ってTFを計算
-      const tf = {};
-      const totalWords = document.length;
-      Object.keys(wordCount).forEach((word) => {
-        tf[word] = wordCount[word] / totalWords;
-      });
-
-      return tf;
-    }
-
-    // TFを計算
-    const tfResult = calculateTF(wordsArray[i]);
-    //console.log(tfResult);
-
-    // オブジェクト同士のプロパティの値を掛け算
-    const resultObject = multiplyObjects(tfResult, idfResults);
-    //console.log(tfResult.The * idfResults.The);
-
-    //////////////////////////////////////
-
-    //console.log(resultObject);
-    console.log();
-    const TFIDF = [];
-    for (const key in resultObject) {
-      const findWord = data[i].wordcloud.find((word) => word.text === key);
-
-      TFIDF.push({
-        text: key,
-        value: resultObject[key],
-        rating: findWord ? findWord.rating : 0.5,
-      });
-    }
-    //console.log(TFIDF);
-
-    TFIDFofGame.push(TFIDF);
+    return idfResults;
   }
 
   //TF-IDF計算
   function multiplyObjects(obj1, obj2) {
     const result = {};
 
-    // obj1とobj2のプロパティをイテレート
     for (const key in obj1) {
       const number = 3;
       if (obj1.hasOwnProperty(key) && obj2.hasOwnProperty(key)) {
@@ -866,15 +839,23 @@ export const TfIdf = (props) => {
     return result;
   }
 
-  console.log(
-    data.map((item, i) => {
-      return { ...item, TFIDF: TFIDFofGame[i] };
-    })
-  );
+  const TFIDFofGame = [];
 
-  setData(
-    data.map((item, i) => {
-      return { ...item, TFIDF: TFIDFofGame[i] };
-    })
-  );
+  const terms = unique;
+  const idfResults = calculateIDF(document, terms);
+
+  const tfResult = calculateTF(wordsArray);
+
+  const resultObject = multiplyObjects(tfResult, idfResults);
+
+  for (const key in resultObject) {
+    const findWord = newData.wordcloud.find((word) => word.text === key);
+    TFIDFofGame.push({
+      text: key,
+      value: resultObject[key],
+      rating: findWord ? findWord.rating : 0.5,
+    });
+  }
+
+  return TFIDFofGame;
 };

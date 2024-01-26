@@ -1,20 +1,14 @@
 import jsonData from "./../../data.json";
-import Wordcloud from "./Wordcloud";
+import { TfIdf } from "./TfIdf";
 
 const FetchData = (props) => {
-  const { setData, addData, setSelectGameIdx } = props;
+  const { data, setData, addData, setSelectGameIdx } = props;
 
-  let gameIds;
-  if (addData == 0) {
-    gameIds = jsonData.appid;
-  } else {
-    gameIds = [...jsonData.appid, parseInt(addData, 10)];
-  }
   // const gameIds = jsonData.appid;
 
-  const fetchData = async () => {
+  const fetchData = async (gameId) => {
     try {
-      const gameDataPromises = gameIds.map(async (gameId) => {
+      const gameDataPromise = async () => {
         const steamReviewsResponse = await fetch(
           `/steam/appreviews/${gameId}?json=1&filter=recent&num_per_page=50&language=english`
         );
@@ -43,20 +37,24 @@ const FetchData = (props) => {
               }))
             : [],
         };
-        
+
         return extractedData;
-      });
+      };
 
-      const gameDataArray = await Promise.all(gameDataPromises);
+      const gameData = await gameDataPromise();
 
-      const gameData = gameDataArray
-        .reduce((acc, gameData) => {
-          acc.push(gameData);
-          return acc;
-        }, [])
-        .filter((e) => e);
+      // const gameData = gameDataArray
+      //   .reduce((acc, gameData) => {
+      //     acc.push(gameData);
+      //     return acc;
+      //   }, [])
+      //   .filter((e) => e);
 
-      Wordcloud({ data: gameData, setData });
+      console.log(gameData);
+
+      if (gameData) {
+        return { ...gameData, TFIDF: TfIdf(gameData) };
+      }
 
       /* steam api */
       // const reviewsResponse  = await fetch("/api/appreviews/1097150?json=1&filter=recent&num_per_page=100");
@@ -80,10 +78,25 @@ const FetchData = (props) => {
       // console.log(steamSpyData);
     } catch (error) {
       console.error("Error fetching data:", error.message);
-      
     }
   };
-  fetchData();
+
+  (async () => {
+    if (data.length === 0) {
+      const gameIds = jsonData.appid;
+      const dataPromise = gameIds.map((gameId) => {
+        return fetchData(gameId);
+      });
+      const dataResult = await Promise.all(dataPromise);
+      const filterData = dataResult.filter((e) => e);
+      setData(filterData);
+    } else {
+      const gameId = parseInt(addData, 10);
+      const dataResult = await fetchData(gameId);
+      if (!dataResult) return;
+      setData([dataResult, ...data]);
+    }
+  })();
 
   // if (addData == 0) {
   // } else {
