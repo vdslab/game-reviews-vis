@@ -13,6 +13,7 @@ import NodeLink from "./components/NodeLink";
 const App = () => {
   const [data, setData] = useState([]);
   const [addData, setAddData] = useState([]);
+  const [addDataNum, setAddDataNum] = useState(0);
   const [selectWord, setSelectWord] = useState("");
   const [selectGameIdx, setSelectGameIdx] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -70,9 +71,10 @@ const App = () => {
   useEffect(() => {
     setLoading(false);
     // setSelectGameIdx(data.length-1);
-    FetchData({ data, setData, addData, setSelectGameIdx });
+    FetchData({ data, setData, addData, setSelectGameIdx, setAddDataNum });
   }, [, addData]);
 
+  
   /*
   useEffect(() => {
     if (data.length !== 0) {
@@ -114,6 +116,8 @@ const App = () => {
         setAddData={setAddData}
         data={data}
         setSelectGameIdx={setSelectGameIdx}
+        addDataNum={addDataNum}
+        setAddDataNum={setAddDataNum}
       ></Header>
       <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
         <Grid item xs={8}>
