@@ -40,6 +40,7 @@ const App = () => {
 
   useEffect(() => {
     setLoading(false);
+    // setSelectGameIdx(data.length-1);
     FetchData({ setData, addData, setSelectGameIdx });
   }, [, addData]);
 
@@ -68,23 +69,14 @@ const App = () => {
     if(data.length !== 0 && data[0].TFIDF){
       const timer = setTimeout(() => {
         setLoading(true);
+        setSelectGameIdx(data.length-1);
       }, 2000);
         return () => clearTimeout(timer);
     }
   }, [addData]);
 
-  /*test */
-  const handleChange = (event) => {
-    setLoading(true);
-  };
-
   return (
     <div>
-      <input
-      type="text"
-      placeholder="Search..."
-      onChange={handleChange}
-    />
       <Header setAddData={setAddData} data={data} setSelectGameIdx={setSelectGameIdx}></Header>
       <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
         <Grid item xs={8}>

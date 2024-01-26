@@ -25,7 +25,7 @@ const FetchSearchTermTGameId = ({ tar, setAddGameId, setSearchSuggestions }) => 
         
       }
     } else {
-      console.error(`No app found containing "${tar}".`);
+      console.log(`No app found containing "${tar}".`);
       setSearchSuggestions([]);
     }
   } catch (error) {
