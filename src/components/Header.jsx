@@ -135,6 +135,7 @@ export default function SearchAppBar(props) {
                 }}
               >
                 <ul>
+                  {/*保留*/}
                   {addData !== 0 &&
                     data.slice(0, 1).map((game, index) => (
                       <li
@@ -156,8 +157,33 @@ export default function SearchAppBar(props) {
                         </span>
                         {game.name}
                       </li>
-                    ))}
-                  {data.slice(1).map((game, index) => (
+                    ))
+                    }
+                  {addData !== 0 &&
+                    data.slice(1).map((game, index) => (
+                    <li
+                      style={{ padding: "10px" }}
+                      key={index}
+                      onClick={() => {
+                        setSelectGameIdx(index+1);
+                        setMenuOpen(false);
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: `rgba(255, 150, ${
+                            255 / data.length + index * (255 / data.length)
+                          })`,
+                        }}
+                      >
+                        {index + 1}. &nbsp;
+                      </span>
+                      {game.name}
+                    </li>
+                  ))}
+
+                  {addData === 0 &&
+                    data.map((game, index) => (
                     <li
                       style={{ padding: "10px" }}
                       key={index}
