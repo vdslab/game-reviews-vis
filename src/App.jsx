@@ -50,7 +50,7 @@ const App = () => {
   useEffect(() => {
     data.forEach((item, index) => {
       item.TFIDF = TFIDF[index];
-
+  
       item.TFIDF.forEach((tfidfword) => {
         const findWord = item.wordcloud.find(
           (word) => word.text === tfidfword.text

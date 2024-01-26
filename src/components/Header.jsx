@@ -16,6 +16,7 @@ import ListItemText from "@mui/material/ListItemText";
 import FetchSearchTermTGameId from "./FetchSearchTermTGameId";
 import { useState, useEffect } from "react";
 import jsonData from "./../../gameidData.json";
+import { Button } from "@mui/material";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -63,21 +64,41 @@ export default function SearchAppBar(props) {
   const [addGameId, setAddGameId] = useState(0);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(false);
 
   const setSearchTermTGameId = (tar) => {
-    if(tar.length > 5)
+    if(tar.length > 2)
       FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions  });
     //    setAddData(tar);
   };
 
+  // const setSearchTermFunc = (tar) => {
+  //   setSearchTerm(tar);
+  //   if(tar.length > 5)
+  //       FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions  });
+  // };
+
+  // const handleSearch = () => {
+  //   console.log(searchTerm);
+  //   FetchSearchTermTGameId({ searchTerm, setAddGameId, setSearchSuggestions  });
+  // };
+
   const handleSuggestionClick = (suggestion) => {
-    setSearchTermTGameId(suggestion);
-    const selectedApp = jsonData.applist.apps.find((app) => app.name === suggestion);
-    if (selectedApp) {
-      setAddData(selectedApp.appid);
-    }
     setSearchSuggestions([]); // カーソルを外す
+
+    setSearchTermTGameId(suggestion);
+
+    /* 完全一致自動検索 */
+    // const selectedApp = jsonData.applist.apps.find((app) => app.name === suggestion);
+    // if (selectedApp) {
+    //   setAddData(selectedApp.appid);
+    // }
   };
+
+  useEffect(() => {
+    console.log(data);
+
+  }, [data]);
 
   useEffect(() => {
     setAddData(addGameId);
@@ -152,11 +173,13 @@ export default function SearchAppBar(props) {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
-              onChange={(e) => setSearchTermTGameId(e.target.value)}            />
+              // onChange={(e) => setSearchTermFunc(e.target.value)}
+              onChange={(e) => setSearchTermTGameId(e.target.value)}    
+            />
               {searchSuggestions.length > 1 && (
                 <Paper sx={{ position: 'absolute', zIndex: 1, left: 0, right: 0, mt: 1 }}>
                   <List>
-                    {searchSuggestions.slice(0, 3).map((suggestion) => (
+                    {searchSuggestions.slice(0, 5).map((suggestion) => (
                       <ListItem button key={suggestion} onClick={() => handleSuggestionClick(suggestion)}>
                         <ListItemText primary={suggestion} />
                       </ListItem>
@@ -164,6 +187,7 @@ export default function SearchAppBar(props) {
                   </List>
                 </Paper>
               )}
+              {/* <Button onClick={() => handleSearch()}>検索</Button> */}
           </Search>
         </Toolbar>
       </AppBar>

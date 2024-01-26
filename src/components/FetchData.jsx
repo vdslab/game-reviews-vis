@@ -21,7 +21,7 @@ const FetchData = (props) => {
         const steamReviewsData = await steamReviewsResponse.json();
 
         const steamDetailsResponse = await fetch(
-          `/steam/api/appdetails?appids=${gameId}`
+          `/steam/api/appdetails?appids=${gameId}&language=english`
         );
 
         const steamDetailsData = await steamDetailsResponse.json();
