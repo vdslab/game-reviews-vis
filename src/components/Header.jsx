@@ -60,7 +60,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar(props) {
-  const { addData, setAddData, data, setSelectGameIdx } = props;
+  const { addData, setAddData, data, setSelectGameIdx, addDataNum, setAddDataNum } = props;
   const [addGameId, setAddGameId] = useState(0);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [menuOpen, setMenuOpen] = useState();
@@ -68,9 +68,10 @@ export default function SearchAppBar(props) {
   const [searchTermBool, setSearchTermBool] = useState();
 
   const setSearchTermTGameId = (tar) => {
-    setSearchTermBool("");
+    if(searchTermBool !=="")
+      setSearchTermBool("");
     setSearchTerm(tar);
-    if (tar.length > 2)
+    if (tar.length > 3)
       FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions });
     //    setAddData(tar);
   };
@@ -97,6 +98,13 @@ export default function SearchAppBar(props) {
     //   setAddData(selectedApp.appid);
     // }
   };
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setAddDataNum(data.length - 47);
+    }
+  }, [data, jsonData]);
+  
 
   useEffect(() => {
     setAddData(addGameId);
@@ -137,7 +145,7 @@ export default function SearchAppBar(props) {
                 <ul>
                   {/*保留*/}
                   {addData !== 0 &&
-                    data.slice(0, 1).map((game, index) => (
+                    data.slice(0, addDataNum).map((game, index) => (
                       <li
                         style={{ padding: "10px" }}
                         key={index}
@@ -160,12 +168,12 @@ export default function SearchAppBar(props) {
                     ))
                     }
                   {addData !== 0 &&
-                    data.slice(1).map((game, index) => (
+                    data.slice(addDataNum).map((game, index) => (
                     <li
                       style={{ padding: "10px" }}
                       key={index}
                       onClick={() => {
-                        setSelectGameIdx(index+1);
+                        setSelectGameIdx(index+addDataNum);
                         setMenuOpen(false);
                       }}
                     >
