@@ -110,7 +110,6 @@ const NodeLink = (props) => {
           .forceLink(links)
           .id((d) => d.id)
           .distance((item) => {
-            console.log(1);
             return (
               0.1 *
               (calcCommonGenres(item.source.genres, item.target.genres) + 1) *
