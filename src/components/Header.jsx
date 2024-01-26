@@ -110,62 +110,61 @@ export default function SearchAppBar(props) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
+          <MenuIcon
             size="large"
             edge="start"
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
-          >
-            <MenuIcon onClick={toggleMenu} />
-            {menuOpen && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "100%",
-                  left: "0",
-                  backgroundColor: "#000",
-                  fontSize: "16px",
-                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-                  borderRadius: "4px",
-                  padding: "8px",
-                  zIndex: "1",
-                  maxHeight: "90vh",
-                  overflowY: "auto",
-                }}
-              >
-                <ul>
-                  {/*保留*/}
-                  {addData !== 0 &&
-                    data.slice(0, 1).map((game, index) => (
-                      <li
-                        style={{ padding: "10px" }}
-                        key={index}
-                        onClick={() => {
-                          setSelectGameIdx(index);
-                          setMenuOpen(false);
-                        }}
-                      >
-                        <span
-                          style={{
-                            color: `rgba(255, 150, ${
-                              255 / data.length + index * (255 / data.length)
-                            })`,
-                          }}
-                        >
-                          検索中. &nbsp;
-                        </span>
-                        {game.name}
-                      </li>
-                    ))
-                    }
-                  {addData !== 0 &&
-                    data.slice(1).map((game, index) => (
+            onClick={toggleMenu}
+          />
+          {menuOpen && (
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: "0",
+                backgroundColor: "#000",
+                fontSize: "16px",
+                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                borderRadius: "4px",
+                padding: "8px",
+                zIndex: "1",
+                maxHeight: "90vh",
+                overflowY: "auto",
+              }}
+            >
+              <ul>
+                {/*保留*/}
+                {addData !== 0 &&
+                  data.slice(0, 1).map((game, index) => (
                     <li
                       style={{ padding: "10px" }}
                       key={index}
                       onClick={() => {
-                        setSelectGameIdx(index+1);
+                        setSelectGameIdx(index);
+                        setMenuOpen(false);
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: `rgba(255, 150, ${
+                            255 / data.length + index * (255 / data.length)
+                          })`,
+                        }}
+                      >
+                        検索中. &nbsp;
+                      </span>
+                      {game.name}
+                    </li>
+                  ))}
+                {addData !== 0 &&
+                  data.slice(1).map((game, index) => (
+                    <li
+                      style={{ padding: "10px" }}
+                      key={index}
+                      onClick={() => {
+                        setSelectGameIdx(index + 1);
                         setMenuOpen(false);
                       }}
                     >
@@ -182,8 +181,8 @@ export default function SearchAppBar(props) {
                     </li>
                   ))}
 
-                  {addData === 0 &&
-                    data.map((game, index) => (
+                {addData === 0 &&
+                  data.map((game, index) => (
                     <li
                       style={{ padding: "10px" }}
                       key={index}
@@ -204,10 +203,10 @@ export default function SearchAppBar(props) {
                       {game.name}
                     </li>
                   ))}
-                </ul>
-              </div>
-            )}
-          </IconButton>
+              </ul>
+            </div>
+          )}
+
           <Typography
             variant="h6"
             noWrap
@@ -220,14 +219,14 @@ export default function SearchAppBar(props) {
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            {searchTerm !== '' &&
+            {searchTerm !== "" && (
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
                 onChange={(e) => setSearchTermTGameId(e.target.value)}
               />
-            }
-            {searchTerm === '' &&
+            )}
+            {searchTerm === "" && (
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
@@ -235,11 +234,21 @@ export default function SearchAppBar(props) {
                 // onChange={(e) => setSearchTermFunc(e.target.value)}
                 onChange={(e) => setSearchTermTGameId(e.target.value)}
               />
-            }
+            )}
             {searchSuggestions.length > 1 &&
               searchTerm &&
               searchTerm !== "" && (
-                <Paper sx={{ position: 'absolute', zIndex: 1, left: 0, right: 0, mt: 1, maxHeight: '80vh', overflowY: 'auto' }}>
+                <Paper
+                  sx={{
+                    position: "absolute",
+                    zIndex: 1,
+                    left: 0,
+                    right: 0,
+                    mt: 1,
+                    maxHeight: "80vh",
+                    overflowY: "auto",
+                  }}
+                >
                   <List>
                     {searchSuggestions.map((suggestion) => (
                       <ListItem
