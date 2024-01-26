@@ -50,8 +50,6 @@ const FetchData = (props) => {
       //   }, [])
       //   .filter((e) => e);
 
-      console.log(gameData);
-
       if (gameData) {
         return { ...gameData, TFIDF: TfIdf(gameData) };
       }

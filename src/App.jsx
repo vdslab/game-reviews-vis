@@ -65,8 +65,6 @@ const App = () => {
   }, [TFIDF]);
   */
 
-  console.log(data);
-
   // useEffect(() => {
   //   if (data.length !== 0 && data[0].TFIDF) {
   //     const timer = setTimeout(() => {
