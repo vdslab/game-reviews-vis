@@ -65,7 +65,7 @@ const App = () => {
 
   return (
     <div>
-      <Header setAddData={setAddData}></Header>
+      <Header setAddData={setAddData} data={data} setSelectGameIdx={setSelectGameIdx}></Header>
       <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
         <Grid item xs={8}>
           <Item square>
