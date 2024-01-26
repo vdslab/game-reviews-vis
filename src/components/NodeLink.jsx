@@ -8,6 +8,8 @@ const NodeLink = (props) => {
   const svgRef = useRef();
   const k = 5;
 
+  console.log(props);
+
   const [newLinks, setNewLinks] = useState([]);
   const [newNode, setNewNode] = useState([]);
 

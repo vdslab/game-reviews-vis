@@ -1,3 +1,5 @@
+import { TfIdf } from "./TfIdf";
+
 const Wordcloud = (props) => {
   const { data, setData } = props;
 
@@ -43,7 +45,7 @@ const Wordcloud = (props) => {
     return { ...item, wordcloud: wordcloud[index] };
   });
 
-  setData(newData);
+  TfIdf({ data: newData, setData });
 };
 
 export default Wordcloud;
