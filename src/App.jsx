@@ -37,11 +37,8 @@ const App = () => {
 
   useEffect(() => {
     setLoading(false);
-    //setSelectGameIdx(data.length - 1);
-    FetchData({ setData, addData, setSelectGameIdx });
-    if (data.length !== 0) {
-      setSelectGameIdx(data.length - 1);
-    }
+    // setSelectGameIdx(data.length-1);
+    FetchData({ data, setData, addData, setSelectGameIdx });
   }, [, addData]);
 
   /*
@@ -70,15 +67,15 @@ const App = () => {
 
   console.log(data);
 
-  useEffect(() => {
-    if (data.length !== 0 && data[0].TFIDF) {
-      const timer = setTimeout(() => {
-        setLoading(true);
-        setSelectGameIdx(data.length - 1);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [addData]);
+  // useEffect(() => {
+  //   if (data.length !== 0 && data[0].TFIDF) {
+  //     const timer = setTimeout(() => {
+  //       setLoading(true);
+  //       setSelectGameIdx(data.length - 1);
+  //     }, 2000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [addData]);
 
   return (
     <div>
