@@ -17,6 +17,38 @@ const App = () => {
   const [selectGameIdx, setSelectGameIdx] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  const genreMapping = {
+    "1": "Action",
+    "37": "Free to Play",
+    "2": "Strategy",
+    "25": "Adventure",
+    "23": "Indie",
+    "3": "RPG",
+    "51": "Animation & Modeling",
+    "58": "Video Production",
+    "4": "Casual",
+    "28": "Simulation",
+    "9": "Racing",
+    "73": "Violent",
+    "29": "Massively Multiplayer",
+    "72": "Nudity",
+    "18": "Sports",
+    "70": "Early Access",
+    "74": "Gore",
+    "57": "Utilities",
+    "52": "Audio Production",
+    "53": "Design & Illustration",
+    "59": "Web Publishing",
+    "55": "Photo Editing",
+    "54": "Education",
+    "56": "Software Training",
+    "71": "Sexual Content",
+    "60": "Game Development",
+    "50": "Accounting",
+    "81": "Documentary",
+    "84": "Tutorial"
+  };
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -158,7 +190,7 @@ const App = () => {
                   >
                     {data[selectGameIdx].genres.map((genre, index) => (
                       <div key={index} style={{ marginRight: "10px" }}>
-                        {genre.description}
+                        {genreMapping[genre.id]}
                       </div>
                     ))}
                   </div>
