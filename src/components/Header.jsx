@@ -6,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
+import Drawer from "@mui/material/Drawer";
 import SearchIcon from "@mui/icons-material/Search";
 // import FetchData from "./FetchData";
 import Paper from "@mui/material/Paper";
@@ -58,10 +59,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar(props) {
-  const { setAddData, setSelectGameIdx } = props;
+  const { setAddData, data, setSelectGameIdx } = props;
   const [addGameId, setAddGameId] = useState(0);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
-  
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const setSearchTermTGameId = (tar) => {
     if(tar.length > 5)
@@ -82,6 +83,10 @@ export default function SearchAppBar(props) {
     setAddData(addGameId);
   }, [addGameId]);
 
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -93,7 +98,44 @@ export default function SearchAppBar(props) {
             aria-label="open drawer"
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <MenuIcon onClick={toggleMenu} />
+            {menuOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: "0",
+                  backgroundColor: "#000",
+                  fontSize: "16px",
+                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+                  borderRadius: "4px",
+                  padding: "8px",
+                  zIndex: "1",
+                  maxHeight: "90vh",
+                  overflowY: "auto",
+                }}
+              >
+                <ul>
+                  {data.map((game, index) => (
+                    <li 
+                      style={{padding:"10px"}}
+                      key={index}
+                      onClick={() => {
+                        setSelectGameIdx(index);
+                        setMenuOpen(false);
+                      }}
+                    >
+                      <span 
+                        style={{color: `rgba(255, 150, ${255 / data.length + index *(255 / data.length)})`}}>
+                          {index+1}. &nbsp;
+                      </span>
+                      {game.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+              
           </IconButton>
           <Typography
             variant="h6"
