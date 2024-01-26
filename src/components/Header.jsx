@@ -63,7 +63,7 @@ export default function SearchAppBar(props) {
   const { addData, setAddData, data, setSelectGameIdx } = props;
   const [addGameId, setAddGameId] = useState(0);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState();
   const [searchTerm, setSearchTerm] = useState(false);
 
   const setSearchTermTGameId = (tar) => {
@@ -94,11 +94,6 @@ export default function SearchAppBar(props) {
     //   setAddData(selectedApp.appid);
     // }
   };
-
-  useEffect(() => {
-    //確認用
-    console.log(data);
-  }, [data]);
 
   useEffect(() => {
     setAddData(addGameId);
