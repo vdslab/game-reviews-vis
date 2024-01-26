@@ -2,8 +2,8 @@ import jsonData from "./../../data.json";
 import { TfIdf } from "./TfIdf";
 
 const FetchData = (props) => {
-  const { data, setData, addData, setSelectGameIdx } = props;
-
+  const { data, setData, addData, setSelectGameIdx, setAddDataNum } = props;
+  
   // const gameIds = jsonData.appid;
 
   const fetchData = async (gameId) => {
@@ -93,6 +93,7 @@ const FetchData = (props) => {
       const dataResult = await fetchData(gameId);
       if (!dataResult) return;
       setData([dataResult, ...data]);
+      // setAddDataNum(data.length - jsonData.appid.length);
     }
   })();
 

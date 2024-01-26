@@ -27,7 +27,7 @@ const Icon = (props) => {
         y={-30}
         clipPath={`url(#clip-${index})`}
       />
-      {isHovered && (
+      {/* {isHovered && (
         <rect x={-37.5} y={30} width={75} height={60} fill="lightgray">
           <text
             x={0}
@@ -40,7 +40,7 @@ const Icon = (props) => {
             {name}
           </text>
         </rect>
-      )}
+      )} */}
     </g>
   );
 };
