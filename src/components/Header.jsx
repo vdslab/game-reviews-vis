@@ -65,14 +65,16 @@ export default function SearchAppBar(props) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const setSearchTermTGameId = (tar) => {
-    if(tar.length > 5)
-      FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions  });
+    if (tar.length > 5)
+      FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions });
     //    setAddData(tar);
   };
 
   const handleSuggestionClick = (suggestion) => {
     setSearchTermTGameId(suggestion);
-    const selectedApp = jsonData.applist.apps.find((app) => app.name === suggestion);
+    const selectedApp = jsonData.applist.apps.find(
+      (app) => app.name === suggestion
+    );
     if (selectedApp) {
       setAddData(selectedApp.appid);
     }
@@ -117,17 +119,22 @@ export default function SearchAppBar(props) {
               >
                 <ul>
                   {data.map((game, index) => (
-                    <li 
-                      style={{padding:"10px"}}
+                    <li
+                      style={{ padding: "10px" }}
                       key={index}
                       onClick={() => {
                         setSelectGameIdx(index);
                         setMenuOpen(false);
                       }}
                     >
-                      <span 
-                        style={{color: `rgba(255, 150, ${255 / data.length + index *(255 / data.length)})`}}>
-                          {index+1}. &nbsp;
+                      <span
+                        style={{
+                          color: `rgba(255, 150, ${
+                            255 / data.length + index * (255 / data.length)
+                          })`,
+                        }}
+                      >
+                        {index + 1}. &nbsp;
                       </span>
                       {game.name}
                     </li>
@@ -135,7 +142,6 @@ export default function SearchAppBar(props) {
                 </ul>
               </div>
             )}
-              
           </IconButton>
           <Typography
             variant="h6"
@@ -152,18 +158,31 @@ export default function SearchAppBar(props) {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
-              onChange={(e) => setSearchTermTGameId(e.target.value)}            />
-              {searchSuggestions.length > 1 && (
-                <Paper sx={{ position: 'absolute', zIndex: 1, left: 0, right: 0, mt: 1 }}>
-                  <List>
-                    {searchSuggestions.slice(0, 3).map((suggestion) => (
-                      <ListItem button key={suggestion} onClick={() => handleSuggestionClick(suggestion)}>
-                        <ListItemText primary={suggestion} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Paper>
-              )}
+              onChange={(e) => setSearchTermTGameId(e.target.value)}
+            />
+            {searchSuggestions.length > 1 && (
+              <Paper
+                sx={{
+                  position: "absolute",
+                  zIndex: 1,
+                  left: 0,
+                  right: 0,
+                  mt: 1,
+                }}
+              >
+                <List>
+                  {searchSuggestions.slice(0, 3).map((suggestion) => (
+                    <ListItem
+                      button
+                      key={suggestion}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                    >
+                      <ListItemText primary={suggestion} />
+                    </ListItem>
+                  ))}
+                </List>
+              </Paper>
+            )}
           </Search>
         </Toolbar>
       </AppBar>

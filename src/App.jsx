@@ -41,10 +41,12 @@ const App = () => {
     FetchData({ setData, addData, setSelectGameIdx });
   }, [, addData]);
 
+  /*
   useEffect(() => {
     if (data.length !== 0) {
       setTFIDF(TfIdf(data));
     }
+    console.log("sdfafasf");
   }, [data]);
 
   useEffect(() => {
@@ -61,10 +63,17 @@ const App = () => {
       });
     });
   }, [TFIDF]);
+  */
+
+  console.log(data);
 
   return (
     <div>
-      <Header setAddData={setAddData} data={data} setSelectGameIdx={setSelectGameIdx}></Header>
+      <Header
+        setAddData={setAddData}
+        data={data}
+        setSelectGameIdx={setSelectGameIdx}
+      ></Header>
       <Grid container style={{ height: "calc(100vh - 90px)" }} spacing={0}>
         <Grid item xs={8}>
           <Item square>

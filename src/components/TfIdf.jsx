@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
 export const TfIdf = (props) => {
-  const data = props;
+  const { data, setData } = props;
 
   //console.log(data);
   //レビューだけを抽出
@@ -833,9 +833,16 @@ export const TfIdf = (props) => {
     //////////////////////////////////////
 
     //console.log(resultObject);
+    console.log();
     const TFIDF = [];
     for (const key in resultObject) {
-      TFIDF.push({ text: key, value: resultObject[key], rating: 1 });
+      const findWord = data[i].wordcloud.find((word) => word.text === key);
+
+      TFIDF.push({
+        text: key,
+        value: resultObject[key],
+        rating: findWord ? findWord.rating : 0.5,
+      });
     }
     //console.log(TFIDF);
 
@@ -859,5 +866,15 @@ export const TfIdf = (props) => {
     return result;
   }
 
-  return TFIDFofGame;
+  console.log(
+    data.map((item, i) => {
+      return { ...item, TFIDF: TFIDFofGame[i] };
+    })
+  );
+
+  setData(
+    data.map((item, i) => {
+      return { ...item, TFIDF: TFIDFofGame[i] };
+    })
+  );
 };
