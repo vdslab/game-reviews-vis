@@ -83,6 +83,7 @@ const App = () => {
   return (
     <div>
       <Header
+        addData={addData}
         setAddData={setAddData}
         data={data}
         setSelectGameIdx={setSelectGameIdx}

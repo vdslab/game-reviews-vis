@@ -60,7 +60,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar(props) {
-  const { setAddData, data, setSelectGameIdx } = props;
+  const { addData, setAddData, data, setSelectGameIdx } = props;
   const [addGameId, setAddGameId] = useState(0);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -136,6 +136,28 @@ export default function SearchAppBar(props) {
                 }}
               >
                 <ul>
+                  {addData && (
+                    data.slice(-1).map((game, index) => (
+                      <li
+                        style={{ padding: "10px" }}
+                        key={index}
+                        onClick={() => {
+                          setSelectGameIdx(index);
+                          setMenuOpen(false);
+                        }}
+                      >
+                        <span
+                          style={{
+                            color: `rgba(255, 150, ${255 / data.length + index * (255 / data.length)})`,
+                          }}
+                        >
+                          検索中. &nbsp;
+                        </span>
+                        {game.name}
+                      </li>
+                    ))
+                    
+                  )}
                   {data.map((game, index) => (
                     <li
                       style={{ padding: "10px" }}
