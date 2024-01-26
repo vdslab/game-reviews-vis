@@ -136,7 +136,7 @@ export default function SearchAppBar(props) {
               >
                 <ul>
                   {addData !== 0 &&
-                    data.slice(-1).map((game, index) => (
+                    data.slice(0, 1).map((game, index) => (
                       <li
                         style={{ padding: "10px" }}
                         key={index}
@@ -157,7 +157,7 @@ export default function SearchAppBar(props) {
                         {game.name}
                       </li>
                     ))}
-                  {data.map((game, index) => (
+                  {data.slice(1).map((game, index) => (
                     <li
                       style={{ padding: "10px" }}
                       key={index}

@@ -92,7 +92,7 @@ const FetchData = (props) => {
       const gameId = parseInt(addData, 10);
       const dataResult = await fetchData(gameId);
       if (!dataResult) return;
-      setData([ ...data, dataResult]);
+      setData([dataResult, ...data]);
     }
   })();
 
