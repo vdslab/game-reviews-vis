@@ -63,7 +63,7 @@ export default function SearchAppBar(props) {
   const { addData, setAddData, data, setSelectGameIdx, addDataNum, setAddDataNum } = props;
   const [addGameId, setAddGameId] = useState(0);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
-  const [menuOpen, setMenuOpen] = useState();
+  const [menuOpen, setMenuOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState();
   const [searchTermBool, setSearchTermBool] = useState();
 
