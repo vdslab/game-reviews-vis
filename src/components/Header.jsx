@@ -68,8 +68,10 @@ export default function SearchAppBar(props) {
   const [searchTermBool, setSearchTermBool] = useState();
 
   const setSearchTermTGameId = async (tar) => {
-    if (searchTermBool !== "") setSearchTermBool("");
-    setSearchTerm(tar);
+    if (tar !== ""){ 
+      setSearchTermBool("");
+      setSearchTerm(tar);
+    }
   
     if (tar.length > 3) {
       await FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions });
@@ -91,7 +93,7 @@ export default function SearchAppBar(props) {
     setSearchTermTGameId(suggestion);
     setSearchTerm("");
     setSearchTermBool(suggestion);
-    setAddData(addGameId);
+
     /* 完全一致自動検索 */
     // const selectedApp = jsonData.applist.apps.find((app) => app.name === suggestion);
     // if (selectedApp) {
@@ -106,9 +108,9 @@ export default function SearchAppBar(props) {
   }, [data, jsonData]);
   
 
-  // useEffect(() => {
-  //   setAddData(addGameId);
-  // }, [addGameId]);
+  useEffect(() => {
+    if(searchTerm === "") setAddData(addGameId);
+  }, [searchTerm]);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
