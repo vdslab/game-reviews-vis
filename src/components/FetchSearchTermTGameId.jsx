@@ -28,9 +28,10 @@ const FetchSearchTermTGameId = ({
         // setSearchSuggestions([...matchingApps.map((app) => app.name)]);
         setSearchSuggestions(
           [...matchingApps]
-            .sort((a, b) => a.name.length - b.name.length)
+            .sort((a, b) => a.name.localeCompare(b.name))
             .map((app) => app.name)
         );
+        
       }
     } else {
       console.error(`No app found containing "${tar}".`);

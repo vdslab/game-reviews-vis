@@ -3,8 +3,6 @@ import { TfIdf } from "./TfIdf";
 
 const FetchData = (props) => {
   const { data, setData, addData, setSelectGameIdx, setAddDataNum } = props;
-  
-  // const gameIds = jsonData.appid;
 
   const fetchData = async (gameId) => {
     try {
@@ -86,7 +84,7 @@ const FetchData = (props) => {
         return fetchData(gameId);
       });
       const dataResult = await Promise.all(dataPromise);
-      const filterData = dataResult.filter((e) => e);
+      const filterData = dataResult.filter((e) => e).slice(0, 50);
       setData(filterData);
     } else {
       const gameId = parseInt(addData, 10);
@@ -96,11 +94,6 @@ const FetchData = (props) => {
       // setAddDataNum(data.length - jsonData.appid.length);
     }
   })();
-
-  // if (addData == 0) {
-  // } else {
-  //   setSelectGameIdx(gameIds.length-1);
-  // }
 };
 
 export default FetchData;

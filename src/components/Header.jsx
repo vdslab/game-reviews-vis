@@ -70,16 +70,19 @@ export default function SearchAppBar(props) {
   } = props;
   const [addGameId, setAddGameId] = useState(0);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
-  const [menuOpen, setMenuOpen] = useState();
+  const [menuOpen, setMenuOpen] = useState(true);
   const [searchTerm, setSearchTerm] = useState();
   const [searchTermBool, setSearchTermBool] = useState();
 
-  const setSearchTermTGameId = (tar) => {
-    if (searchTermBool !== "") setSearchTermBool("");
-    setSearchTerm(tar);
-    if (tar.length > 3)
-      FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions });
-    //    setAddData(tar);
+  const setSearchTermTGameId = async (tar) => {
+    if (tar !== "") {
+      setSearchTermBool("");
+      setSearchTerm(tar);
+    }
+
+    if (tar.length > 3) {
+      await FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions });
+    }
   };
 
   // const setSearchTermFunc = (tar) => {
@@ -107,13 +110,13 @@ export default function SearchAppBar(props) {
 
   useEffect(() => {
     if (data && data.length > 0) {
-      setAddDataNum(data.length - 47);
+      setAddDataNum(data.length - 50);
     }
   }, [data, jsonData]);
 
   useEffect(() => {
-    setAddData(addGameId);
-  }, [addGameId]);
+    if (searchTerm === "") setAddData(addGameId);
+  }, [searchTerm]);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -142,13 +145,13 @@ export default function SearchAppBar(props) {
                 boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                 borderRadius: "4px",
                 padding: "8px",
+                cursor: "pointer",
                 zIndex: "1",
                 maxHeight: "90vh",
                 overflowY: "auto",
               }}
             >
               <ul>
-                {/*保留*/}
                 {addData !== 0 &&
                   data.slice(0, addDataNum).map((game, index) => (
                     <li
@@ -166,7 +169,7 @@ export default function SearchAppBar(props) {
                           })`,
                         }}
                       >
-                        追加済. &nbsp;
+                        検索中. &nbsp;
                       </span>
                       {game.name}
                     </li>

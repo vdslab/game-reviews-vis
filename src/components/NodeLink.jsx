@@ -22,7 +22,7 @@ const ZoomableSVG = (props) => {
   }, []);
   return (
     <svg ref={svgRef} width={window.innerWidth} height={window.innerHeight}>
-      <g transform={`translate(${x + 200},${y + 200})scale(${k - 0.5})`}>
+      <g transform={`translate(${x + 300},${y + 200})scale(${k - 0.5})`}>
         {children}
       </g>
     </svg>
