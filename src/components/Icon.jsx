@@ -36,7 +36,6 @@ const Icon = (props) => {
         y={-30}
         clipPath={`url(#clip-${index})`}
       />
-
       {isHovered && (
         <g>
           <rect

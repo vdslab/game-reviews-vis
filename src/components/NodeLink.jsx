@@ -7,9 +7,9 @@ const ZoomableSVG = (props) => {
   const { children } = props;
 
   const svgRef = useRef();
-  const [k, setK] = useState(0.5);
-  const [x, setX] = useState(200);
-  const [y, setY] = useState(200);
+  const [k, setK] = useState(1);
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
 
   useEffect(() => {
     const zoom = d3.zoom().on("zoom", (event) => {
@@ -22,7 +22,9 @@ const ZoomableSVG = (props) => {
   }, []);
   return (
     <svg ref={svgRef} width={window.innerWidth} height={window.innerHeight}>
-      <g transform={`translate(${x},${y})scale(${k})`}>{children}</g>
+      <g transform={`translate(${x + 200},${y + 200})scale(${k - 0.5})`}>
+        {children}
+      </g>
     </svg>
   );
 };
