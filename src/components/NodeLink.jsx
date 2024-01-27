@@ -7,9 +7,10 @@ const ZoomableSVG = (props) => {
   const { children } = props;
 
   const svgRef = useRef();
-  const [k, setK] = useState(1);
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
+  const [k, setK] = useState(0.5);
+  const [x, setX] = useState(200);
+  const [y, setY] = useState(200);
+
   useEffect(() => {
     const zoom = d3.zoom().on("zoom", (event) => {
       const { x, y, k } = event.transform;
