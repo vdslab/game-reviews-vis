@@ -3,8 +3,6 @@ import { TfIdf } from "./TfIdf";
 
 const FetchData = (props) => {
   const { data, setData, addData, setSelectGameIdx, setAddDataNum } = props;
-  
-  // const gameIds = jsonData.appid;
 
   const fetchData = async (gameId) => {
     try {
@@ -96,11 +94,6 @@ const FetchData = (props) => {
       // setAddDataNum(data.length - jsonData.appid.length);
     }
   })();
-
-  // if (addData == 0) {
-  // } else {
-  //   setSelectGameIdx(gameIds.length-1);
-  // }
 };
 
 export default FetchData;

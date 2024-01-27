@@ -67,13 +67,13 @@ export default function SearchAppBar(props) {
   const [searchTerm, setSearchTerm] = useState();
   const [searchTermBool, setSearchTermBool] = useState();
 
-  const setSearchTermTGameId = (tar) => {
-    if(searchTermBool !=="")
-      setSearchTermBool("");
+  const setSearchTermTGameId = async (tar) => {
+    if (searchTermBool !== "") setSearchTermBool("");
     setSearchTerm(tar);
-    if (tar.length > 3)
-      FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions });
-    //    setAddData(tar);
+  
+    if (tar.length > 3) {
+      await FetchSearchTermTGameId({ tar, setAddGameId, setSearchSuggestions });
+    }
   };
 
   // const setSearchTermFunc = (tar) => {
@@ -91,7 +91,7 @@ export default function SearchAppBar(props) {
     setSearchTermTGameId(suggestion);
     setSearchTerm("");
     setSearchTermBool(suggestion);
-
+    setAddData(addGameId);
     /* 完全一致自動検索 */
     // const selectedApp = jsonData.applist.apps.find((app) => app.name === suggestion);
     // if (selectedApp) {
@@ -106,9 +106,9 @@ export default function SearchAppBar(props) {
   }, [data, jsonData]);
   
 
-  useEffect(() => {
-    setAddData(addGameId);
-  }, [addGameId]);
+  // useEffect(() => {
+  //   setAddData(addGameId);
+  // }, [addGameId]);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -137,13 +137,13 @@ export default function SearchAppBar(props) {
                   boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
                   borderRadius: "4px",
                   padding: "8px",
+                  cursor: "pointer",
                   zIndex: "1",
                   maxHeight: "90vh",
                   overflowY: "auto",
                 }}
               >
                 <ul>
-                  {/*保留*/}
                   {addData !== 0 &&
                     data.slice(0, addDataNum).map((game, index) => (
                       <li
